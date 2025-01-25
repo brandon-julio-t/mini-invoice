@@ -221,6 +221,8 @@ export const PageView = () => {
                                           "customerName",
                                           customer.name,
                                         );
+
+                                        form.setValue("invoiceItems", []);
                                       }}
                                     >
                                       {customer.name}
