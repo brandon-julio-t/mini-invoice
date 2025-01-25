@@ -175,7 +175,7 @@ export const PageView = () => {
                                     (customer) => customer.id === field.value,
                                   )?.name
                                 : "Select customer"}
-                              <ChevronsUpDown className="opacity-50" />
+                              <ChevronsUpDown className="ml-auto opacity-50" />
                             </Button>
                           </FormControl>
                         </PopoverTrigger>
