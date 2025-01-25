@@ -256,6 +256,16 @@ export const PageView = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
+                    {fieldArray.fields.length <= 0 && (
+                      <TableRow>
+                        <TableCell colSpan={4}>
+                          <TypographyMuted className="text-center">
+                            Please add at least one product
+                          </TypographyMuted>
+                        </TableCell>
+                      </TableRow>
+                    )}
+
                     {fieldArray.fields.map((field, index) => (
                       <TableRow key={field._id}>
                         <TableCell>
