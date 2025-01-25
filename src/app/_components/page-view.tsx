@@ -403,26 +403,19 @@ export const PageView = () => {
                     ))}
                   </TableBody>
                 </Table>
+              </CardContent>
 
+              <CardFooter className="justify-end gap-2">
                 <Button
                   type="button"
                   variant="outline"
-                  className="w-full"
                   disabled={!form.getValues("customerId")}
-                  onClick={() =>
-                    fieldArray.append({
-                      productName: "",
-                      price: 0,
-                      quantity: 0,
-                    })
-                  }
+                  onClick={onAddProductRow}
                 >
                   <PlusIcon />
                   Add product
                 </Button>
-              </CardContent>
 
-              <CardFooter>
                 <Button
                   type="submit"
                   isLoading={
