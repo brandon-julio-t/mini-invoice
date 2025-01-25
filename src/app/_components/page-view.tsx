@@ -536,15 +536,11 @@ const useGetAllProductsQuery = () => {
 };
 
 const createProductSchema = z.object({
-  customerId: z.string(),
   name: z.string(),
-  price: z.number(),
 });
 
 const useCreateProductMutation = () => {
   const queryClient = useQueryClient();
-
-  const upsertProductPriceMutation = useUpsertProductPriceMutation();
 
   return useMutation({
     mutationFn: async (params: z.infer<typeof createProductSchema>) => {
@@ -561,17 +557,10 @@ const useCreateProductMutation = () => {
 
       localStorage.setItem("products", JSON.stringify(products));
 
-      await upsertProductPriceMutation.mutateAsync({
-        productId: createdProduct.id,
-        customerId: params.customerId,
-        price: params.price,
-      });
-
       return { data: createdProduct };
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["products"] });
-      await queryClient.invalidateQueries({ queryKey: ["productPrices"] });
     },
   });
 };
@@ -663,8 +652,8 @@ const createInvoiceSchema = z.object({
     z.object({
       productId: z.string().nullish(),
       productName: z.string(),
-      price: z.coerce.number(),
-      quantity: z.coerce.number(),
+      price: z.coerce.number().min(1),
+      quantity: z.coerce.number().min(1),
     }),
   ),
 });
@@ -709,8 +698,6 @@ const useCreateInvoiceMutation = () => {
         if (!productId) {
           const createdProduct = await createProductMutation.mutateAsync({
             name: invoiceItem.productName,
-            price: invoiceItem.price,
-            customerId,
           });
 
           productId = createdProduct.data.id;
