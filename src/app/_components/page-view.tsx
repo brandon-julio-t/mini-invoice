@@ -295,7 +295,10 @@ export const PageView = () => {
                                               <CommandItem
                                                 key={product.id}
                                                 onSelect={() => {
-                                                  field.onChange(product.id);
+                                                  form.setValue(
+                                                    `invoiceItems.${index}.productId`,
+                                                    product.id,
+                                                  );
 
                                                   form.setValue(
                                                     `invoiceItems.${index}.productName`,
