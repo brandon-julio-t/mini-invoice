@@ -390,28 +390,25 @@ export const PageView = () => {
                         </TableCell>
                       </TableRow>
                     ))}
-
-                    <TableRow>
-                      <TableCell colSpan={999}>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          className="w-full"
-                          onClick={() =>
-                            fieldArray.append({
-                              productName: "",
-                              price: 0,
-                              quantity: 0,
-                            })
-                          }
-                        >
-                          <PlusIcon />
-                          Add product
-                        </Button>
-                      </TableCell>
-                    </TableRow>
                   </TableBody>
                 </Table>
+
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full"
+                  disabled={!form.getValues("customerId")}
+                  onClick={() =>
+                    fieldArray.append({
+                      productName: "",
+                      price: 0,
+                      quantity: 0,
+                    })
+                  }
+                >
+                  <PlusIcon />
+                  Add product
+                </Button>
               </CardContent>
 
               <CardFooter>
