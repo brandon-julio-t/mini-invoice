@@ -106,6 +106,8 @@ export const PageView = () => {
 
     form.setValue("customerId", response.data.id);
     form.setValue("customerName", response.data.name);
+    form.setValue("invoiceItems", []);
+    onAddProductRow();
   };
 
   const getAllProductsQuery = useGetAllProductsQuery();
@@ -135,6 +137,13 @@ export const PageView = () => {
         )
         .toLocaleString(),
   ].join("\n");
+
+  const onAddProductRow = () =>
+    fieldArray.append({
+      productName: "",
+      price: 0,
+      quantity: 0,
+    });
 
   return (
     <div className="flex h-screen w-screen items-center justify-center">
@@ -223,6 +232,8 @@ export const PageView = () => {
                                         );
 
                                         form.setValue("invoiceItems", []);
+
+                                        onAddProductRow();
                                       }}
                                     >
                                       {customer.name}
