@@ -32,18 +32,19 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { TypographyMuted } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
+import {
+  useCreateCustomerMutation,
+  useGetAllCustomersQuery,
+} from "@/service/customer";
+import {
+  createInvoiceSchema,
+  useCreateInvoiceMutation,
+} from "@/service/invoice";
+import { useGetAllProductsQuery } from "@/service/product";
+import { useGetAllProductPricesQuery } from "@/service/product-price";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Check,
   ChevronsUpDown,
@@ -52,11 +53,10 @@ import {
   SearchIcon,
   TrashIcon,
 } from "lucide-react";
-import { nanoid } from "nanoid";
 import React from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
+import { type z } from "zod";
 
 export const PageView = () => {
   const form = useForm<z.infer<typeof createInvoiceSchema>>({
@@ -146,593 +146,315 @@ export const PageView = () => {
     });
 
   return (
-    <div className="flex h-screen w-screen items-center justify-center">
-      <main className="container">
-        <Card>
-          <Form {...form}>
-            <form onSubmit={onSubmit}>
-              <CardHeader>
-                <CardTitle>Invoice</CardTitle>
-                <CardDescription>
-                  <TypographyMuted>
-                    Please fill in the details below to create an invoice
-                  </TypographyMuted>
-                </CardDescription>
-              </CardHeader>
+    <main className="container max-w-screen-lg">
+      <Form {...form}>
+        <form onSubmit={onSubmit} className="space-y-4 py-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Invoice</CardTitle>
+              <CardDescription>
+                <TypographyMuted>
+                  Please fill in the details below to create an invoice
+                </TypographyMuted>
+              </CardDescription>
+            </CardHeader>
+          </Card>
 
-              <CardContent className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="customerId"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Customer</FormLabel>
+          <Card>
+            <CardHeader>
+              <FormField
+                control={form.control}
+                name="customerId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Customer</FormLabel>
 
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              variant="outline"
-                              role="combobox"
-                              className={cn(
-                                "w-full justify-between",
-                                !field.value && "text-muted-foreground",
-                              )}
-                            >
-                              {field.value
-                                ? getAllCustomersQuery.data?.data.find(
-                                    (customer) => customer.id === field.value,
-                                  )?.name
-                                : "Select customer"}
-                              <ChevronsUpDown className="ml-auto opacity-50" />
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
-                          <Command shouldFilter={false}>
-                            <CommandInput
-                              value={searchCustomerName}
-                              onInput={(e) => {
-                                setSearchCustomerName(e.currentTarget.value);
-                              }}
-                              placeholder="Search customer..."
-                              className="h-9"
-                            />
-                            <CommandList>
-                              <CommandEmpty>
-                                <TypographyMuted className="mb-4">
-                                  No customer found
-                                </TypographyMuted>
-
-                                <Button
-                                  variant="outline"
-                                  onClick={onCreateCustomer}
-                                  disabled={!searchCustomerName}
-                                >
-                                  {searchCustomerName
-                                    ? `Create customer: ${searchCustomerName}`
-                                    : "Please type a customer name first"}
-                                </Button>
-                              </CommandEmpty>
-                              <CommandGroup>
-                                {getAllCustomersQuery.data?.data.map(
-                                  (customer) => (
-                                    <CommandItem
-                                      value={customer.name}
-                                      key={customer.id}
-                                      onSelect={() => {
-                                        form.setValue(
-                                          "customerId",
-                                          customer.id,
-                                        );
-
-                                        form.setValue(
-                                          "customerName",
-                                          customer.name,
-                                        );
-
-                                        form.setValue("invoiceItems", []);
-
-                                        onAddProductRow();
-                                      }}
-                                    >
-                                      {customer.name}
-                                      <Check
-                                        className={cn(
-                                          "ml-auto",
-                                          customer.id === field.value
-                                            ? "opacity-100"
-                                            : "opacity-0",
-                                        )}
-                                      />
-                                    </CommandItem>
-                                  ),
-                                )}
-                              </CommandGroup>
-                            </CommandList>
-                          </Command>
-                        </PopoverContent>
-                      </Popover>
-
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="min-w-[200px]">Product</TableHead>
-                      <TableHead className="min-w-[200px]">Price</TableHead>
-                      <TableHead className="min-w-[200px]">Quantity</TableHead>
-                      <TableHead className="min-w-[50px]"></TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {fieldArray.fields.length <= 0 && (
-                      <TableRow>
-                        <TableCell colSpan={4}>
-                          <TypographyMuted className="text-center">
-                            Please add at least one product
-                          </TypographyMuted>
-                        </TableCell>
-                      </TableRow>
-                    )}
-
-                    {fieldArray.fields.map((field, index) => (
-                      <TableRow key={field._id}>
-                        <TableCell>
-                          <FormField
-                            control={form.control}
-                            name={`invoiceItems.${index}.productName`}
-                            render={({ field }) => (
-                              <FormItem className="flex flex-row gap-2 space-y-0">
-                                <Popover>
-                                  <div>
-                                    <PopoverTrigger asChild>
-                                      <Button variant="outline" size="icon">
-                                        <SearchIcon />
-                                      </Button>
-                                    </PopoverTrigger>
-                                  </div>
-                                  <PopoverContent className="p-0">
-                                    <Command>
-                                      <CommandInput />
-                                      <CommandList>
-                                        <CommandEmpty>
-                                          No product found
-                                        </CommandEmpty>
-                                        <CommandGroup>
-                                          {getAllProductsQuery.data?.data.map(
-                                            (product) => (
-                                              <CommandItem
-                                                key={product.id}
-                                                onSelect={() => {
-                                                  form.setValue(
-                                                    `invoiceItems.${index}.productId`,
-                                                    product.id,
-                                                  );
-
-                                                  form.setValue(
-                                                    `invoiceItems.${index}.productName`,
-                                                    product.name,
-                                                  );
-
-                                                  form.setValue(
-                                                    `invoiceItems.${index}.price`,
-                                                    getAllProductPricesQuery.data?.data.find(
-                                                      (price) =>
-                                                        price.productId ===
-                                                          product.id &&
-                                                        price.customerId ===
-                                                          form.getValues(
-                                                            "customerId",
-                                                          ),
-                                                    )?.price ?? 0,
-                                                  );
-                                                }}
-                                              >
-                                                {product.name}
-                                                <Check
-                                                  className={cn(
-                                                    "ml-auto",
-                                                    product.id === field.value
-                                                      ? "opacity-100"
-                                                      : "opacity-0",
-                                                  )}
-                                                />
-                                              </CommandItem>
-                                            ),
-                                          )}
-                                        </CommandGroup>
-                                      </CommandList>
-                                    </Command>
-                                  </PopoverContent>
-                                </Popover>
-
-                                <FormControl>
-                                  <Input {...field} />
-                                </FormControl>
-
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </TableCell>
-
-                        <TableCell>
-                          <FormField
-                            control={form.control}
-                            name={`invoiceItems.${index}.price`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormControl>
-                                  <Input {...field} type="number" />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </TableCell>
-
-                        <TableCell>
-                          <FormField
-                            control={form.control}
-                            name={`invoiceItems.${index}.quantity`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormControl>
-                                  <Input {...field} type="number" />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </TableCell>
-
-                        <TableCell>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
                           <Button
-                            variant="destructive"
-                            size="icon"
-                            onClick={() => fieldArray.remove(index)}
+                            variant="outline"
+                            role="combobox"
+                            className={cn(
+                              "w-full justify-between",
+                              !field.value && "text-muted-foreground",
+                            )}
                           >
-                            <TrashIcon />
+                            {field.value
+                              ? getAllCustomersQuery.data?.data.find(
+                                  (customer) => customer.id === field.value,
+                                )?.name
+                              : "Select customer"}
+                            <ChevronsUpDown className="ml-auto opacity-50" />
                           </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </CardContent>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
+                        <Command shouldFilter={false}>
+                          <CommandInput
+                            value={searchCustomerName}
+                            onInput={(e) => {
+                              setSearchCustomerName(e.currentTarget.value);
+                            }}
+                            placeholder="Search customer..."
+                            className="h-9"
+                          />
+                          <CommandList>
+                            <CommandEmpty>
+                              <TypographyMuted className="mb-4">
+                                No customer found
+                              </TypographyMuted>
 
-              <CardFooter className="justify-end gap-2">
+                              <Button
+                                variant="outline"
+                                onClick={onCreateCustomer}
+                                disabled={!searchCustomerName}
+                              >
+                                {searchCustomerName
+                                  ? `Create customer: ${searchCustomerName}`
+                                  : "Please type a customer name first"}
+                              </Button>
+                            </CommandEmpty>
+                            <CommandGroup>
+                              {getAllCustomersQuery.data?.data.map(
+                                (customer) => (
+                                  <CommandItem
+                                    value={customer.name}
+                                    key={customer.id}
+                                    onSelect={() => {
+                                      form.setValue("customerId", customer.id);
+
+                                      form.setValue(
+                                        "customerName",
+                                        customer.name,
+                                      );
+
+                                      form.setValue("invoiceItems", []);
+
+                                      onAddProductRow();
+                                    }}
+                                  >
+                                    {customer.name}
+                                    <Check
+                                      className={cn(
+                                        "ml-auto",
+                                        customer.id === field.value
+                                          ? "opacity-100"
+                                          : "opacity-0",
+                                      )}
+                                    />
+                                  </CommandItem>
+                                ),
+                              )}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </CardHeader>
+          </Card>
+
+          <Card>
+            {fieldArray.fields.length <= 0 && (
+              <CardHeader>
+                <TypographyMuted className="text-center">
+                  Please add at least one product
+                </TypographyMuted>
+              </CardHeader>
+            )}
+
+            {fieldArray.fields.map((field, index) => (
+              <React.Fragment key={field._id}>
+                <CardContent className="pt-6">
+                  <div className="flex flex-col gap-4 md:flex-row">
+                    <FormField
+                      control={form.control}
+                      name={`invoiceItems.${index}.productName`}
+                      render={({ field }) => (
+                        <FormItem className="w-full md:max-w-[250px]">
+                          <FormLabel>Product</FormLabel>
+
+                          <div className="flex flex-row gap-2 space-y-0">
+                            <Popover>
+                              <div>
+                                <PopoverTrigger asChild>
+                                  <Button variant="outline" size="icon">
+                                    <SearchIcon />
+                                  </Button>
+                                </PopoverTrigger>
+                              </div>
+                              <PopoverContent className="p-0">
+                                <Command>
+                                  <CommandInput />
+                                  <CommandList>
+                                    <CommandEmpty>
+                                      No product found
+                                    </CommandEmpty>
+                                    <CommandGroup>
+                                      {getAllProductsQuery.data?.data.map(
+                                        (product) => (
+                                          <CommandItem
+                                            key={product.id}
+                                            onSelect={() => {
+                                              form.setValue(
+                                                `invoiceItems.${index}.productId`,
+                                                product.id,
+                                              );
+
+                                              form.setValue(
+                                                `invoiceItems.${index}.productName`,
+                                                product.name,
+                                              );
+
+                                              form.setValue(
+                                                `invoiceItems.${index}.price`,
+                                                getAllProductPricesQuery.data?.data.find(
+                                                  (price) =>
+                                                    price.productId ===
+                                                      product.id &&
+                                                    price.customerId ===
+                                                      form.getValues(
+                                                        "customerId",
+                                                      ),
+                                                )?.price ?? 0,
+                                              );
+                                            }}
+                                          >
+                                            {product.name}
+                                            <Check
+                                              className={cn(
+                                                "ml-auto",
+                                                product.id === field.value
+                                                  ? "opacity-100"
+                                                  : "opacity-0",
+                                              )}
+                                            />
+                                          </CommandItem>
+                                        ),
+                                      )}
+                                    </CommandGroup>
+                                  </CommandList>
+                                </Command>
+                              </PopoverContent>
+                            </Popover>
+
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                          </div>
+
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name={`invoiceItems.${index}.price`}
+                      render={({ field }) => (
+                        <FormItem className="w-full md:max-w-[250px]">
+                          <FormLabel>Price</FormLabel>
+                          <FormControl>
+                            <Input {...field} type="number" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name={`invoiceItems.${index}.quantity`}
+                      render={({ field }) => (
+                        <FormItem className="w-full md:max-w-[250px]">
+                          <FormLabel>Quantity</FormLabel>
+                          <FormControl>
+                            <Input {...field} type="number" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <div>
+                      <FormItem>
+                        <FormLabel>&nbsp;</FormLabel>
+                        <FormControl>
+                          <div className="block">
+                            <Button
+                              variant="destructive"
+                              size="icon"
+                              onClick={() => fieldArray.remove(index)}
+                            >
+                              <TrashIcon />
+                            </Button>
+                          </div>
+                        </FormControl>
+                      </FormItem>
+                    </div>
+                  </div>
+                </CardContent>
+
+                <Separator className="my-4" />
+              </React.Fragment>
+            ))}
+
+            <CardFooter className="justify-end gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                disabled={!form.getValues("customerId")}
+                onClick={onAddProductRow}
+              >
+                <PlusIcon />
+                Add product
+              </Button>
+
+              <Button
+                type="submit"
+                isLoading={
+                  form.formState.isSubmitting || createInvoiceMutation.isPending
+                }
+              >
+                Save
+              </Button>
+            </CardFooter>
+          </Card>
+
+          <Card>
+            <CardContent className="pt-6">
+              <CardTitle className="flex flex-row items-center justify-between">
+                <div>Receipt</div>
                 <Button
                   type="button"
                   variant="outline"
-                  disabled={!form.getValues("customerId")}
-                  onClick={onAddProductRow}
+                  size="icon"
+                  onClick={async () => {
+                    try {
+                      await navigator.clipboard.writeText(receipt);
+                      toast.success("Copied to clipboard");
+                    } catch (error) {
+                      console.error(error);
+                      toast.error("Failed to copy to clipboard");
+                    }
+                  }}
                 >
-                  <PlusIcon />
-                  Add product
+                  <CopyIcon />
                 </Button>
+              </CardTitle>
 
-                <Button
-                  type="submit"
-                  isLoading={
-                    form.formState.isSubmitting ||
-                    createInvoiceMutation.isPending
-                  }
-                >
-                  Save
-                </Button>
-              </CardFooter>
-
-              <Separator />
-
-              <CardContent className="pt-6">
-                <CardTitle className="flex flex-row items-center justify-between">
-                  <div>Receipt</div>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="icon"
-                    onClick={async () => {
-                      try {
-                        await navigator.clipboard.writeText(receipt);
-                        toast.success("Copied to clipboard");
-                      } catch (error) {
-                        console.error(error);
-                        toast.error("Failed to copy to clipboard");
-                      }
-                    }}
-                  >
-                    <CopyIcon />
-                  </Button>
-                </CardTitle>
-
-                <section className="whitespace-pre-wrap font-mono">
-                  {receipt}
-                </section>
-              </CardContent>
-            </form>
-          </Form>
-        </Card>
-      </main>
-    </div>
+              <section className="whitespace-pre-wrap font-mono">
+                {receipt}
+              </section>
+            </CardContent>
+          </Card>
+        </form>
+      </Form>
+    </main>
   );
-};
-
-interface Customer {
-  id: string;
-  name: string;
-}
-
-interface GetAllCustomersQueryParams {
-  q: string;
-}
-
-const useGetAllCustomersQuery = (params: GetAllCustomersQueryParams) => {
-  return useQuery({
-    queryKey: ["customers", params.q],
-    queryFn: async () => {
-      const customers = JSON.parse(
-        localStorage.getItem("customers") ?? "[]",
-      ) as Customer[];
-
-      const filteredCustomers = customers.filter((customer) =>
-        customer.name.toLowerCase().includes(params.q.toLowerCase()),
-      );
-
-      return { data: filteredCustomers };
-    },
-  });
-};
-
-const createCustomerSchema = z.object({
-  name: z.string(),
-});
-
-const useCreateCustomerMutation = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (params: z.infer<typeof createCustomerSchema>) => {
-      const customers = JSON.parse(
-        localStorage.getItem("customers") ?? "[]",
-      ) as Customer[];
-
-      const createdCustomer = {
-        id: nanoid(),
-        name: params.name,
-      } satisfies Customer;
-
-      customers.push(createdCustomer);
-
-      localStorage.setItem("customers", JSON.stringify(customers));
-
-      return { data: createdCustomer };
-    },
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["customers"] });
-    },
-  });
-};
-
-interface Product {
-  id: string;
-  name: string;
-}
-
-const useGetAllProductsQuery = () => {
-  return useQuery({
-    queryKey: ["products"],
-    queryFn: async () => {
-      const products = JSON.parse(
-        localStorage.getItem("products") ?? "[]",
-      ) as Product[];
-
-      return { data: products };
-    },
-  });
-};
-
-const createProductSchema = z.object({
-  name: z.string(),
-});
-
-const useCreateProductMutation = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (params: z.infer<typeof createProductSchema>) => {
-      const products = JSON.parse(
-        localStorage.getItem("products") ?? "[]",
-      ) as Product[];
-
-      const createdProduct = {
-        id: nanoid(),
-        name: params.name,
-      } satisfies Product;
-
-      products.push(createdProduct);
-
-      localStorage.setItem("products", JSON.stringify(products));
-
-      return { data: createdProduct };
-    },
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["products"] });
-    },
-  });
-};
-
-interface ProductPrice {
-  id: string;
-  productId: string;
-  customerId: string;
-  price: number;
-}
-
-const useGetAllProductPricesQuery = () => {
-  return useQuery({
-    queryKey: ["productPrices"],
-    queryFn: async () => {
-      const productPrices = JSON.parse(
-        localStorage.getItem("productPrices") ?? "[]",
-      ) as ProductPrice[];
-
-      return { data: productPrices };
-    },
-  });
-};
-
-const upsertProductPriceSchema = z.object({
-  productId: z.string(),
-  customerId: z.string(),
-  price: z.number(),
-});
-
-const useUpsertProductPriceMutation = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (params: z.infer<typeof upsertProductPriceSchema>) => {
-      const productPrices = JSON.parse(
-        localStorage.getItem("productPrices") ?? "[]",
-      ) as ProductPrice[];
-
-      let existingProductPrice = productPrices.find(
-        (productPrice) =>
-          productPrice.productId === params.productId &&
-          productPrice.customerId === params.customerId,
-      );
-
-      if (existingProductPrice) {
-        existingProductPrice.price = params.price;
-        localStorage.setItem("productPrices", JSON.stringify(productPrices));
-      } else {
-        const createdProductPrice = {
-          id: nanoid(),
-          productId: params.productId,
-          customerId: params.customerId,
-          price: params.price,
-        } satisfies ProductPrice;
-
-        productPrices.push(createdProductPrice);
-
-        localStorage.setItem("productPrices", JSON.stringify(productPrices));
-
-        existingProductPrice = createdProductPrice;
-      }
-
-      return { data: existingProductPrice };
-    },
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["productPrices"] });
-    },
-  });
-};
-
-interface Invoice {
-  id: string;
-  customerId: string;
-}
-
-interface InvoiceItem {
-  invoiceId: string;
-  productId: string;
-  price: number;
-  quantity: number;
-}
-
-const createInvoiceSchema = z.object({
-  customerId: z.string().nullish(),
-  customerName: z.string(),
-
-  invoiceItems: z.array(
-    z.object({
-      productId: z.string().nullish(),
-      productName: z.string(),
-      price: z.coerce.number().min(1),
-      quantity: z.coerce.number().min(1),
-    }),
-  ),
-});
-
-const useCreateInvoiceMutation = () => {
-  const queryClient = useQueryClient();
-
-  const createCustomerMutation = useCreateCustomerMutation();
-  const createProductMutation = useCreateProductMutation();
-  const upsertProductPriceMutation = useUpsertProductPriceMutation();
-
-  return useMutation({
-    mutationFn: async (params: z.infer<typeof createInvoiceSchema>) => {
-      const { customerName } = params;
-      let customerId = params.customerId;
-      if (!customerId) {
-        const createdCustomer = await createCustomerMutation.mutateAsync({
-          name: customerName,
-        });
-
-        customerId = createdCustomer.data.id;
-      }
-
-      const invoices = JSON.parse(
-        localStorage.getItem("invoices") ?? "[]",
-      ) as Invoice[];
-
-      const createdInvoice = {
-        id: nanoid(),
-        customerId,
-      } satisfies Invoice;
-
-      invoices.push(createdInvoice);
-
-      localStorage.setItem("invoices", JSON.stringify(invoices));
-
-      const createdInvoiceItems: InvoiceItem[] = [];
-
-      for (const invoiceItem of params.invoiceItems) {
-        let productId = invoiceItem.productId;
-
-        if (!productId) {
-          const createdProduct = await createProductMutation.mutateAsync({
-            name: invoiceItem.productName,
-          });
-
-          productId = createdProduct.data.id;
-        }
-
-        await upsertProductPriceMutation.mutateAsync({
-          productId,
-          customerId,
-          price: invoiceItem.price,
-        });
-
-        createdInvoiceItems.push({
-          productId,
-          invoiceId: createdInvoice.id,
-          price: invoiceItem.price,
-          quantity: invoiceItem.quantity,
-        });
-      }
-
-      const invoiceItems = JSON.parse(
-        localStorage.getItem("invoiceItems") ?? "[]",
-      ) as InvoiceItem[];
-
-      invoiceItems.push(...createdInvoiceItems);
-
-      localStorage.setItem("invoiceItems", JSON.stringify(invoiceItems));
-
-      return { data: createdInvoice };
-    },
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["invoices"] });
-      await queryClient.invalidateQueries({ queryKey: ["products"] });
-      await queryClient.invalidateQueries({ queryKey: ["productPrices"] });
-      await queryClient.invalidateQueries({ queryKey: ["customers"] });
-    },
-  });
 };
