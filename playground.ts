@@ -4,19 +4,41 @@ import { nanoid } from "nanoid";
 async function main() {
   const count = 1000;
 
-  const data = [] as Array<{
-    id: string;
-    name: string;
-  }>;
+  {
+    // customer
+    const data = [] as Array<{
+      id: string;
+      name: string;
+    }>;
 
-  for (let i = 0; i < count; i++) {
-    data.push({
-      id: nanoid(),
-      name: faker.commerce.productName(),
-    });
+    for (let i = 0; i < count; i++) {
+      data.push({
+        id: nanoid(),
+        name: faker.person.fullName(),
+      });
+    }
+
+    console.log(JSON.stringify(data));
   }
 
-  console.log(JSON.stringify(data));
+  return;
+
+  {
+    // product
+    const data = [] as Array<{
+      id: string;
+      name: string;
+    }>;
+
+    for (let i = 0; i < count; i++) {
+      data.push({
+        id: nanoid(),
+        name: faker.commerce.productName(),
+      });
+    }
+
+    console.log(JSON.stringify(data));
+  }
 }
 
 main()
