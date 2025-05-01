@@ -17,7 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { type createInvoiceSchema } from "@/service/invoice";
-import { SearchIcon } from "lucide-react";
+import { ChevronsUpDownIcon, SearchIcon } from "lucide-react";
 import React from "react";
 import { type UseFormReturn } from "react-hook-form";
 import { type z } from "zod";
@@ -45,6 +45,7 @@ export const ChooseProductDrawer: React.ComponentType<{
                 <Button variant="outline" className="w-full justify-start">
                   <SearchIcon />
                   {productName || "Choose product"}
+                  <ChevronsUpDownIcon className="ml-auto" />
                 </Button>
               </FormControl>
             </DrawerTrigger>
