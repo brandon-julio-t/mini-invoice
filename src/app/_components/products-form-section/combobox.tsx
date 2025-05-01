@@ -9,7 +9,13 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { FormControl, FormField } from "@/components/ui/form";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import {
   Popover,
   PopoverContent,
@@ -82,83 +88,90 @@ export const ProductCombobox: React.ComponentType<{
       control={form.control}
       name={`invoiceItems.${index}.productName`}
       render={({ field }) => (
-        <Popover open={open} onOpenChange={setOpen}>
-          <PopoverTrigger asChild>
-            <FormControl>
-              <Button variant="outline" className="w-full justify-start">
-                <SearchIcon />
-                {field.value || "Choose product"}
-              </Button>
-            </FormControl>
-          </PopoverTrigger>
-          <PopoverContent className="w-(--radix-popover-trigger-width) p-0">
-            <Command>
+        <FormItem>
+          <FormLabel>Product</FormLabel>
+
+          <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger asChild>
               <FormControl>
-                <CommandInput
-                  value={name}
-                  onInput={(e) => setName(e.currentTarget.value)}
-                />
+                <Button variant="outline" className="w-full justify-start">
+                  <SearchIcon />
+                  {field.value || "Choose product"}
+                </Button>
               </FormControl>
-              <CommandList>
-                <CommandEmpty className="px-6">
-                  {name ? (
-                    <Button variant="outline" onClick={onAddNewProduct}>
-                      Add &quot;{name}&quot;
-                    </Button>
-                  ) : (
-                    <TypographyMuted>
-                      No product found.
-                      <br />
-                      Type a product name to add it.
-                    </TypographyMuted>
-                  )}
-                </CommandEmpty>
-                <CommandGroup>
-                  {getAllProductsQuery.data?.data.map((product) => (
-                    <CommandItem
-                      key={product.id}
-                      onSelect={() => {
-                        form.setValue(
-                          `invoiceItems.${index}.productId`,
-                          product.id,
-                          { shouldValidate: true },
-                        );
+            </PopoverTrigger>
+            <PopoverContent className="p-0">
+              <Command>
+                <FormControl>
+                  <CommandInput
+                    value={name}
+                    onInput={(e) => setName(e.currentTarget.value)}
+                  />
+                </FormControl>
+                <CommandList>
+                  <CommandEmpty className="px-6">
+                    {name ? (
+                      <Button variant="outline" onClick={onAddNewProduct}>
+                        Add &quot;{name}&quot;
+                      </Button>
+                    ) : (
+                      <TypographyMuted>
+                        No product found.
+                        <br />
+                        Type a product name to add it.
+                      </TypographyMuted>
+                    )}
+                  </CommandEmpty>
+                  <CommandGroup>
+                    {getAllProductsQuery.data?.data.map((product) => (
+                      <CommandItem
+                        key={product.id}
+                        onSelect={() => {
+                          form.setValue(
+                            `invoiceItems.${index}.productId`,
+                            product.id,
+                            { shouldValidate: true },
+                          );
 
-                        form.setValue(
-                          `invoiceItems.${index}.productName`,
-                          product.name,
-                          { shouldValidate: true },
-                        );
+                          form.setValue(
+                            `invoiceItems.${index}.productName`,
+                            product.name,
+                            { shouldValidate: true },
+                          );
 
-                        form.setValue(
-                          `invoiceItems.${index}.price`,
-                          getAllProductPricesQuery.data?.data.find(
-                            (price) =>
-                              price.productId === product.id &&
-                              price.customerId === form.getValues("customerId"),
-                          )?.price ?? 0,
-                          { shouldValidate: true },
-                        );
+                          form.setValue(
+                            `invoiceItems.${index}.price`,
+                            getAllProductPricesQuery.data?.data.find(
+                              (price) =>
+                                price.productId === product.id &&
+                                price.customerId ===
+                                  form.getValues("customerId"),
+                            )?.price ?? 0,
+                            { shouldValidate: true },
+                          );
 
-                        setName("");
-                        setOpen(false);
-                      }}
-                    >
-                      <Check
-                        className={cn(
-                          productId === product.id
-                            ? "opacity-100"
-                            : "opacity-0",
-                        )}
-                      />
-                      {product.name}
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              </CommandList>
-            </Command>
-          </PopoverContent>
-        </Popover>
+                          setName("");
+                          setOpen(false);
+                        }}
+                      >
+                        <Check
+                          className={cn(
+                            productId === product.id
+                              ? "opacity-100"
+                              : "opacity-0",
+                          )}
+                        />
+                        {product.name}
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                </CommandList>
+              </Command>
+            </PopoverContent>
+          </Popover>
+
+          <FormMessage />
+        </FormItem>
       )}
     />
   );
