@@ -61,7 +61,7 @@ export const CustomersDrawerContent: React.ComponentType<{
 
   return (
     <React.Fragment>
-      <div className="relative mx-2">
+      <div className="relative mx-4">
         <SearchIcon className="text-muted-foreground absolute top-1/2 left-2.5 size-(--text-base) -translate-y-1/2" />
         <Input
           className="pl-8"
@@ -73,7 +73,7 @@ export const CustomersDrawerContent: React.ComponentType<{
       </div>
 
       {customers.length <= 0 && (
-        <div className="mt-2 px-2">
+        <div className="mt-4 px-4">
           {searchCustomerName ? (
             <Button
               variant="outline"
@@ -98,7 +98,6 @@ export const CustomersDrawerContent: React.ComponentType<{
       {/* The scrollable element for your list */}
       <div
         ref={parentRef}
-        className="pt-2"
         style={{
           height: `60vh`,
           overflowY: "auto", // Make it scroll!
@@ -134,6 +133,7 @@ export const CustomersDrawerContent: React.ComponentType<{
                 <Button
                   variant="ghost"
                   className="w-full justify-start"
+                  size="lg"
                   onClick={() => {
                     form.setValue("customerId", customer.id, {
                       shouldValidate: true,

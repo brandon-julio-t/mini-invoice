@@ -53,7 +53,7 @@ export const InventoryDrawerContent: React.ComponentType = () => {
         <DrawerDescription>Manage your inventory here</DrawerDescription>
       </DrawerHeader>
 
-      <div className="relative mx-2">
+      <div className="relative mx-4">
         <SearchIcon className="text-muted-foreground absolute top-1/2 left-2.5 size-(--text-base) -translate-y-1/2" />
         <Input
           className="pl-8"
@@ -66,7 +66,7 @@ export const InventoryDrawerContent: React.ComponentType = () => {
 
       <Drawer open={openAddProductForm} onOpenChange={setOpenAddProductForm}>
         {products.length <= 0 && (
-          <div className="mt-2 px-2">
+          <div className="mt-4 px-4">
             {name ? (
               <DrawerTrigger asChild>
                 <Button variant="outline" className="w-full">
@@ -103,7 +103,6 @@ export const InventoryDrawerContent: React.ComponentType = () => {
       {/* The scrollable element for your list */}
       <div
         ref={parentRef}
-        className="pt-2"
         style={{
           height: `60vh`,
           overflowY: "auto", // Make it scroll!

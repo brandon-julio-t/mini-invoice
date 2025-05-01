@@ -64,7 +64,8 @@ export const InventoryProductListItem: React.ComponentType<{
         <DrawerTrigger asChild>
           <Button
             variant="ghost"
-            className="flex flex-1 flex-row justify-between"
+            size="lg"
+            className="flex flex-1 flex-row justify-between !px-4"
           >
             <span>{product.name}</span>
             <span className="flex items-center">
@@ -79,13 +80,17 @@ export const InventoryProductListItem: React.ComponentType<{
         <AnimatePresence>
           {showDelete && (
             <motion.div
-              initial={{ opacity: 0, width: 0, x: 36, marginRight: 0 }}
-              animate={{ opacity: 1, width: "auto", x: 0, marginRight: 8 }}
-              exit={{ opacity: 0, width: 0, x: 36, marginRight: 0 }}
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 40 }}
             >
               <Drawer>
                 <DrawerTrigger asChild>
-                  <Button variant="destructive" size="icon">
+                  <Button
+                    variant="destructive"
+                    size="icon"
+                    className="mr-4 size-10"
+                  >
                     <TrashIcon />
                   </Button>
                 </DrawerTrigger>

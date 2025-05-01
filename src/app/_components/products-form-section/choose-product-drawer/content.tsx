@@ -77,7 +77,7 @@ export const ChooseProductDrawerContent: React.ComponentType<{
 
   return (
     <React.Fragment>
-      <div className="relative mx-2">
+      <div className="relative mx-4">
         <SearchIcon className="text-muted-foreground absolute top-1/2 left-2.5 size-(--text-base) -translate-y-1/2" />
         <Input
           className="pl-8"
@@ -89,7 +89,7 @@ export const ChooseProductDrawerContent: React.ComponentType<{
       </div>
 
       {products.length <= 0 && (
-        <div className="mt-2 px-2">
+        <div className="mt-4 px-4">
           {name ? (
             <Button
               variant="outline"
@@ -114,7 +114,6 @@ export const ChooseProductDrawerContent: React.ComponentType<{
       {/* The scrollable element for your list */}
       <div
         ref={parentRef}
-        className="pt-2"
         style={{
           height: `60vh`,
           overflowY: "auto", // Make it scroll!
@@ -151,6 +150,7 @@ export const ChooseProductDrawerContent: React.ComponentType<{
                 <Button
                   variant="ghost"
                   className="w-full"
+                  size="lg"
                   onClick={() => {
                     form.setValue(
                       `invoiceItems.${index}.productId`,
