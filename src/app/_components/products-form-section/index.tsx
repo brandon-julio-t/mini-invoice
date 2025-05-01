@@ -18,6 +18,8 @@ import { type UseFieldArrayReturn, type UseFormReturn } from "react-hook-form";
 import { type z } from "zod";
 import { ProductCombobox } from "./combobox";
 import { ProductInventoryStockSection } from "./inventory/stock-section";
+import { motion } from "motion/react";
+import { AnimatePresence } from "motion/react";
 
 export const ProductsFormSection: React.ComponentType<{
   form: UseFormReturn<z.infer<typeof createInvoiceSchema>>;
@@ -30,59 +32,106 @@ export const ProductsFormSection: React.ComponentType<{
 }> = ({ form, fieldArray, onAddProductRow }) => {
   return (
     <Card>
-      {fieldArray.fields.map((field, index) => {
-        return (
-          <React.Fragment key={field._id}>
-            <CardContent className="pt-6">
-              <div className="flex flex-col gap-2">
-                <ProductCombobox form={form} index={index} />
+      <AnimatePresence>
+        {fieldArray.fields.map((field, index) => {
+          return (
+            <motion.div
+              key={field._id}
+              initial={{
+                id: "initial",
+                opacity: 0,
+                scale: 0.98,
+                y: -8,
+                height: 0,
+              }}
+              animate={{
+                id: "animate",
+                opacity: 1,
+                scale: 1,
+                y: 0,
+                height: "auto",
+              }}
+              exit={{
+                id: "exit",
+                opacity: 0,
+                scale: 0.98,
+                y: -8,
+                height: 0,
+              }}
+              onAnimationComplete={(def) => {
+                /** @docs https://github.com/orgs/react-hook-form/discussions/11379 */
+                const isExit =
+                  typeof def === "object" && "id" in def && def.id === "exit";
 
-                <FormField
-                  control={form.control}
-                  name={`invoiceItems.${index}.price`}
-                  render={({ field }) => (
-                    <FormItem className="w-full">
-                      <FormLabel>Price</FormLabel>
-                      <FormControl>
-                        <Input {...field} type="number" />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                const isLastItem = index === fieldArray.fields.length - 1;
 
-                <FormField
-                  control={form.control}
-                  name={`invoiceItems.${index}.quantity`}
-                  render={({ field }) => (
-                    <FormItem className="w-full">
-                      <FormLabel>Quantity</FormLabel>
-                      <FormControl>
-                        <Input {...field} type="number" />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                const shouldHandleFormAnimationBug =
+                  isExit && isLastItem && fieldArray.fields.length > 1;
 
-                <ProductInventoryStockSection form={form} index={index} />
+                console.log({
+                  def,
+                  isExit,
+                  isLastItem,
+                  shouldHandleFormAnimationBug,
+                });
 
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="icon"
-                  onClick={() => fieldArray.remove(index)}
-                  className="w-full min-w-9"
-                >
-                  <TrashIcon />
-                </Button>
-              </div>
-            </CardContent>
+                if (shouldHandleFormAnimationBug) {
+                  fieldArray.remove(index);
+                }
+              }}
+            >
+              <CardContent className="pt-6">
+                <div className="flex flex-col gap-2">
+                  <ProductCombobox form={form} index={index} />
 
-            <Separator className="my-4" />
-          </React.Fragment>
-        );
-      })}
+                  <FormField
+                    control={form.control}
+                    name={`invoiceItems.${index}.price`}
+                    render={({ field }) => (
+                      <FormItem className="w-full">
+                        <FormLabel>Price</FormLabel>
+                        <FormControl>
+                          <Input {...field} type="number" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name={`invoiceItems.${index}.quantity`}
+                    render={({ field }) => (
+                      <FormItem className="w-full">
+                        <FormLabel>Quantity</FormLabel>
+                        <FormControl>
+                          <Input {...field} type="number" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <ProductInventoryStockSection form={form} index={index} />
+
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    onClick={() => fieldArray.remove(index)}
+                    className="w-full min-w-9"
+                    disabled={fieldArray.fields.length === 1}
+                  >
+                    <TrashIcon />
+                  </Button>
+                </div>
+              </CardContent>
+
+              <Separator className="my-4" />
+            </motion.div>
+          );
+        })}
+      </AnimatePresence>
 
       <CardFooter className="justify-end gap-2">
         <Button
