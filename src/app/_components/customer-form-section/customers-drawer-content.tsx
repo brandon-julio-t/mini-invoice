@@ -62,7 +62,7 @@ export const CustomersDrawerContent: React.ComponentType<{
 
   return (
     <React.Fragment>
-      <div className="relative mx-2 mb-2">
+      <div className="relative mx-2">
         <SearchIcon className="text-muted-foreground absolute top-1/2 left-2.5 size-(--text-base) -translate-y-1/2" />
         <Input
           className="pl-8"
@@ -74,7 +74,7 @@ export const CustomersDrawerContent: React.ComponentType<{
       </div>
 
       {customers.length <= 0 && (
-        <div className="mt-0 px-2">
+        <div className="mt-2 px-2">
           {searchCustomerName ? (
             <Button
               variant="outline"
@@ -99,6 +99,7 @@ export const CustomersDrawerContent: React.ComponentType<{
       {/* The scrollable element for your list */}
       <div
         ref={parentRef}
+        className="pt-2"
         style={{
           height: `60vh`,
           overflow: "auto", // Make it scroll!
