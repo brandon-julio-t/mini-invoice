@@ -104,19 +104,19 @@ export const PageView = () => {
             {form.watch("customerId") && (
               <motion.div
                 initial={{
-                  translateY: -8,
+                  y: -8,
                   scale: 0.98,
                   opacity: 0,
                   filter: "blur(4px)",
                 }}
                 animate={{
-                  translateY: 0,
+                  y: 0,
                   scale: 1,
                   opacity: 1,
                   filter: "blur(0px)",
                 }}
                 exit={{
-                  translateY: -8,
+                  y: -8,
                   scale: 0.98,
                   opacity: 0,
                   filter: "blur(4px)",
