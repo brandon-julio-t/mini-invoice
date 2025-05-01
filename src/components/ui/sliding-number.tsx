@@ -1,12 +1,12 @@
 "use client";
+import { useEffect, useId } from "react";
 import {
   type MotionValue,
   motion,
-  motionValue,
   useSpring,
   useTransform,
+  motionValue,
 } from "motion/react";
-import { useEffect, useId } from "react";
 import useMeasure from "react-use-measure";
 
 const TRANSITION = {
@@ -78,7 +78,6 @@ type SlidingNumberProps = {
   value: number;
   padStart?: boolean;
   decimalSeparator?: string;
-  className?: string;
 };
 
 export function SlidingNumber({
@@ -88,10 +87,10 @@ export function SlidingNumber({
 }: SlidingNumberProps) {
   const absValue = Math.abs(value);
   const [integerPart, decimalPart] = absValue.toString().split(".");
-  const integerValue = parseInt(integerPart, 10);
+  const integerValue = parseInt(integerPart ?? "0", 10);
   const paddedInteger =
     padStart && integerValue < 10 ? `0${integerPart}` : integerPart;
-  const integerDigits = paddedInteger.split("");
+  const integerDigits = paddedInteger?.split("") ?? [];
   const integerPlaces = integerDigits.map((_, i) =>
     Math.pow(10, integerDigits.length - i - 1),
   );
@@ -103,7 +102,7 @@ export function SlidingNumber({
         <Digit
           key={`pos-${integerPlaces[index]}`}
           value={integerValue}
-          place={integerPlaces[index]}
+          place={integerPlaces[index] ?? 0}
         />
       ))}
       {decimalPart && (
