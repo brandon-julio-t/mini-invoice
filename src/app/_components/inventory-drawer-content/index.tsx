@@ -15,7 +15,6 @@ import { PlusIcon } from "lucide-react";
 import React from "react";
 import { InventoryDrawerAddProductForm } from "./add-product-form";
 import { InventoryProductListItem } from "./list-item";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 export const InventoryDrawerContent: React.ComponentType = () => {
   const getAllProductsQuery = useGetAllProductsQuery();
