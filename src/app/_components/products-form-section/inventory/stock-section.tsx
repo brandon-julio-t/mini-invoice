@@ -11,6 +11,7 @@ import React from "react";
 import { type UseFormReturn } from "react-hook-form";
 import { type z } from "zod";
 import { ProductInventoryUpsertForm } from "./upsert-form";
+import { SlidingNumber } from "@/components/ui/sliding-number";
 
 export const ProductInventoryStockSection: React.ComponentType<{
   form: UseFormReturn<z.infer<typeof createInvoiceSchema>>;
@@ -35,9 +36,13 @@ export const ProductInventoryStockSection: React.ComponentType<{
     <section className="flex flex-col">
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button type="button" variant="outline" className="justify-between">
-            Current Stock: {Number(currentQuantity).toLocaleString()}
-            <PencilIcon />
+          <Button
+            type="button"
+            variant="outline"
+            className="items-center justify-start"
+          >
+            Current Stock: <SlidingNumber value={currentQuantity} />
+            <PencilIcon className="ml-auto" />
           </Button>
         </PopoverTrigger>
         <PopoverContent>
@@ -51,11 +56,11 @@ export const ProductInventoryStockSection: React.ComponentType<{
       </Popover>
 
       <Button type="button" variant="ghost" className="justify-start">
-        Used Stock: {Number(usedQuantity).toLocaleString()}
+        Used Stock: <SlidingNumber value={usedQuantity} />
       </Button>
 
       <Button type="button" variant="ghost" className="justify-start">
-        Final Stock: {Number(finalQuantity).toLocaleString()}
+        Final Stock: <SlidingNumber value={finalQuantity} />
       </Button>
     </section>
   );
