@@ -8,7 +8,6 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
-import { TypographyMuted } from "@/components/ui/typography";
 import { useGetAllProductsQuery } from "@/service/product";
 import { useGetAllProductInventoriesQuery } from "@/service/product-inventory";
 import { useVirtualizer } from "@tanstack/react-virtual";

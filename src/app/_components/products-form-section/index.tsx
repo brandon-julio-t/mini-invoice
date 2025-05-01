@@ -10,16 +10,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
 import { type createInvoiceSchema } from "@/service/invoice";
-import { CheckCircle2Icon, CopyIcon, PlusIcon, TrashIcon } from "lucide-react";
+import { CheckCircle2Icon, PlusIcon, TrashIcon } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import React from "react";
 import { type UseFieldArrayReturn, type UseFormReturn } from "react-hook-form";
 import { type z } from "zod";
 import { ChooseProductDrawer } from "./choose-product-drawer";
 import { ProductInventoryStockSection } from "./inventory/stock-section";
-import { motion } from "motion/react";
-import { AnimatePresence } from "motion/react";
 
 export const ProductsFormSection: React.ComponentType<{
   form: UseFormReturn<z.infer<typeof createInvoiceSchema>>;
