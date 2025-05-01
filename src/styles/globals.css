@@ -121,7 +121,7 @@
 }
 
 @utility debug {
-  @apply !border-red-600;
+  @apply !border !border-red-600;
 }
 
 @layer base {
