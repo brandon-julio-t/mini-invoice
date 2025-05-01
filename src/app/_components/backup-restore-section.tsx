@@ -9,22 +9,22 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { Customer, useGetAllCustomersQuery } from "@/service/customer";
-import { Product, useGetAllProductsQuery } from "@/service/product";
+import { type Customer, useGetAllCustomersQuery } from "@/service/customer";
+import { type Product, useGetAllProductsQuery } from "@/service/product";
 import {
-  ProductInventory,
+  type ProductInventory,
   useGetAllProductInventoriesQuery,
 } from "@/service/product-inventory";
 import {
-  ProductPrice,
+  type ProductPrice,
   useGetAllProductPricesQuery,
 } from "@/service/product-price";
 import { ArchiveRestoreIcon, DatabaseBackupIcon } from "lucide-react";
 import React from "react";
 import { toast } from "sonner";
+
 export const BackupRestoreSection = () => {
   const [restoreText, setRestoreText] = React.useState("");
-  const [open, setOpen] = React.useState(false);
 
   const getAllCustomersQuery = useGetAllCustomersQuery({ q: "" });
   const getAllProductsQuery = useGetAllProductsQuery();
@@ -69,9 +69,9 @@ export const BackupRestoreSection = () => {
       JSON.stringify(parsedBackup.productInventories),
     );
 
-    toast.success("Backup restored");
+    toast.success("Backup restored. Refreshing page...");
 
-    setOpen(false);
+    window.location.reload();
   };
 
   return (
@@ -80,7 +80,7 @@ export const BackupRestoreSection = () => {
         <DatabaseBackupIcon />
         Backup
       </Button>
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog>
         <DialogTrigger asChild>
           <Button variant="outline">
             <ArchiveRestoreIcon />
