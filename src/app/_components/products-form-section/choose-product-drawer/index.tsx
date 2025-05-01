@@ -2,13 +2,13 @@
 
 import { Button } from "@/components/ui/button";
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
 import {
   FormControl,
   FormField,
@@ -16,92 +16,56 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { TypographyMuted } from "@/components/ui/typography";
-import { cn } from "@/lib/utils";
 import { type createInvoiceSchema } from "@/service/invoice";
-import {
-  useCreateProductMutation,
-  useGetAllProductsQuery,
-} from "@/service/product";
-import { useGetAllProductPricesQuery } from "@/service/product-price";
-import { Check, SearchIcon } from "lucide-react";
+import { SearchIcon } from "lucide-react";
 import React from "react";
 import { type UseFormReturn } from "react-hook-form";
-import { toast } from "sonner";
 import { type z } from "zod";
+import { ChooseProductDrawerContent } from "./content";
 
-export const ProductCombobox: React.ComponentType<{
+export const ChooseProductDrawer: React.ComponentType<{
   form: UseFormReturn<z.infer<typeof createInvoiceSchema>>;
   index: number;
 }> = ({ form, index }) => {
-  const getAllProductsQuery = useGetAllProductsQuery();
-  const getAllProductPricesQuery = useGetAllProductPricesQuery();
-
   const [open, setOpen] = React.useState(false);
-  const [name, setName] = React.useState("");
 
-  const createProductMutation = useCreateProductMutation();
-
-  const onAddNewProduct = async () => {
-    if (!name) {
-      toast.error("Product name is required");
-      return;
-    }
-
-    const response = await createProductMutation.mutateAsync({
-      name,
-    });
-
-    toast.success(`Product ${name} created`);
-
-    form.setValue(`invoiceItems.${index}.productId`, response.data.id, {
-      shouldValidate: true,
-    });
-
-    form.setValue(`invoiceItems.${index}.productName`, response.data.name, {
-      shouldValidate: true,
-    });
-
-    form.setValue(
-      `invoiceItems.${index}.price`,
-      getAllProductPricesQuery.data?.data.find(
-        (price) =>
-          price.productId === response.data.id &&
-          price.customerId === form.getValues("customerId"),
-      )?.price ?? 0,
-      { shouldValidate: true },
-    );
-
-    setName("");
-    setOpen(false);
-  };
-
-  const productId = form.watch(`invoiceItems.${index}.productId`);
+  const productName = form.watch(`invoiceItems.${index}.productName`);
 
   return (
     <FormField
       control={form.control}
-      name={`invoiceItems.${index}.productName`}
+      name={`invoiceItems.${index}.productId`}
       render={({ field }) => (
         <FormItem>
           <FormLabel>Product</FormLabel>
 
-          <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
+          <Drawer open={open} onOpenChange={setOpen}>
+            <DrawerTrigger asChild>
               <FormControl>
                 <Button variant="outline" className="w-full justify-start">
                   <SearchIcon />
-                  {field.value || "Choose product"}
+                  {productName || "Choose product"}
                 </Button>
               </FormControl>
-            </PopoverTrigger>
-            <PopoverContent className="p-0">
-              <Command>
+            </DrawerTrigger>
+            <DrawerContent>
+              <DrawerHeader>
+                <DrawerTitle>Choose Product</DrawerTitle>
+                <DrawerDescription>
+                  Choose a product to add to the invoice
+                </DrawerDescription>
+              </DrawerHeader>
+
+              <ChooseProductDrawerContent
+                form={form}
+                index={index}
+                selectedProductId={field.value ?? ""}
+                onProductSelected={() => {
+                  setOpen(false);
+                }}
+              />
+
+              {/* <Command>
                 <FormControl>
                   <CommandInput
                     value={name}
@@ -166,9 +130,9 @@ export const ProductCombobox: React.ComponentType<{
                     ))}
                   </CommandGroup>
                 </CommandList>
-              </Command>
-            </PopoverContent>
-          </Popover>
+              </Command> */}
+            </DrawerContent>
+          </Drawer>
 
           <FormMessage />
         </FormItem>

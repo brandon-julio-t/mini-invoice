@@ -16,7 +16,7 @@ import { PlusIcon, TrashIcon } from "lucide-react";
 import React from "react";
 import { type UseFieldArrayReturn, type UseFormReturn } from "react-hook-form";
 import { type z } from "zod";
-import { ProductCombobox } from "./combobox";
+import { ChooseProductDrawer } from "./choose-product-drawer";
 import { ProductInventoryStockSection } from "./inventory/stock-section";
 import { motion } from "motion/react";
 import { AnimatePresence } from "motion/react";
@@ -34,6 +34,10 @@ export const ProductsFormSection: React.ComponentType<{
     <Card>
       <AnimatePresence>
         {fieldArray.fields.map((field, index) => {
+          const hasSelectedProduct = !!form.watch(
+            `invoiceItems.${index}.productId`,
+          );
+
           return (
             <motion.div
               key={field._id}
@@ -68,51 +72,48 @@ export const ProductsFormSection: React.ComponentType<{
                 const shouldHandleFormAnimationBug =
                   isExit && isLastItem && fieldArray.fields.length > 1;
 
-                console.log({
-                  def,
-                  isExit,
-                  isLastItem,
-                  shouldHandleFormAnimationBug,
-                });
-
                 if (shouldHandleFormAnimationBug) {
                   fieldArray.remove(index);
                 }
               }}
             >
-              <CardContent className="pt-6">
+              <CardContent className="border-b pb-6">
                 <div className="flex flex-col gap-2">
-                  <ProductCombobox form={form} index={index} />
+                  <ChooseProductDrawer form={form} index={index} />
 
-                  <FormField
-                    control={form.control}
-                    name={`invoiceItems.${index}.price`}
-                    render={({ field }) => (
-                      <FormItem className="w-full">
-                        <FormLabel>Price</FormLabel>
-                        <FormControl>
-                          <Input {...field} type="number" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  {hasSelectedProduct && (
+                    <>
+                      <FormField
+                        control={form.control}
+                        name={`invoiceItems.${index}.price`}
+                        render={({ field }) => (
+                          <FormItem className="w-full">
+                            <FormLabel>Price</FormLabel>
+                            <FormControl>
+                              <Input {...field} type="number" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-                  <FormField
-                    control={form.control}
-                    name={`invoiceItems.${index}.quantity`}
-                    render={({ field }) => (
-                      <FormItem className="w-full">
-                        <FormLabel>Quantity</FormLabel>
-                        <FormControl>
-                          <Input {...field} type="number" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                      <FormField
+                        control={form.control}
+                        name={`invoiceItems.${index}.quantity`}
+                        render={({ field }) => (
+                          <FormItem className="w-full">
+                            <FormLabel>Quantity</FormLabel>
+                            <FormControl>
+                              <Input {...field} type="number" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-                  <ProductInventoryStockSection form={form} index={index} />
+                      <ProductInventoryStockSection form={form} index={index} />
+                    </>
+                  )}
 
                   <Button
                     type="button"
@@ -126,25 +127,28 @@ export const ProductsFormSection: React.ComponentType<{
                   </Button>
                 </div>
               </CardContent>
-
-              <Separator className="my-4" />
             </motion.div>
           );
         })}
       </AnimatePresence>
 
-      <CardFooter className="justify-end gap-2">
+      <CardFooter className="flex flex-col gap-2">
         <Button
           type="button"
           variant="outline"
           disabled={!form.getValues("customerId")}
           onClick={onAddProductRow}
+          className="w-full"
         >
           <PlusIcon />
           Add product
         </Button>
 
-        <Button type="submit" isLoading={form.formState.isSubmitting}>
+        <Button
+          type="submit"
+          isLoading={form.formState.isSubmitting}
+          className="w-full"
+        >
           Save
         </Button>
       </CardFooter>

@@ -1,9 +1,12 @@
 import { Button } from "@/components/ui/button";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
 import { type createInvoiceSchema } from "@/service/invoice";
 import { useGetAllProductInventoriesQuery } from "@/service/product-inventory";
 import { PencilIcon } from "lucide-react";
@@ -34,8 +37,8 @@ export const ProductInventoryStockSection: React.ComponentType<{
 
   return (
     <section className="flex flex-col">
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
+      <Drawer open={open} onOpenChange={setOpen}>
+        <DrawerTrigger asChild>
           <Button
             type="button"
             variant="outline"
@@ -44,16 +47,23 @@ export const ProductInventoryStockSection: React.ComponentType<{
             Current Stock: <SlidingNumber value={currentQuantity} />
             <PencilIcon className="ml-auto" />
           </Button>
-        </PopoverTrigger>
-        <PopoverContent>
+        </DrawerTrigger>
+        <DrawerContent className="pb-4">
+          <DrawerHeader>
+            <DrawerTitle>Update Stock</DrawerTitle>
+            <DrawerDescription>
+              Update the stock for &quot;{productName}&quot;
+            </DrawerDescription>
+          </DrawerHeader>
+
           <ProductInventoryUpsertForm
             productId={productId}
             productName={productName}
             currentQuantity={currentQuantity}
             onUpsertSuccess={() => setOpen(false)}
           />
-        </PopoverContent>
-      </Popover>
+        </DrawerContent>
+      </Drawer>
 
       <Button type="button" variant="ghost" className="justify-start">
         Used Stock: <SlidingNumber value={usedQuantity} />
