@@ -7,14 +7,15 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { TypographyMuted } from "@/components/ui/typography";
 import { useGetAllProductsQuery } from "@/service/product";
 import { useGetAllProductInventoriesQuery } from "@/service/product-inventory";
+import { useVirtualizer } from "@tanstack/react-virtual";
 import { PlusIcon } from "lucide-react";
 import React from "react";
 import { InventoryDrawerAddProductForm } from "./add-product-form";
 import { InventoryProductListItem } from "./list-item";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export const InventoryDrawerContent: React.ComponentType = () => {
   const getAllProductsQuery = useGetAllProductsQuery();
@@ -33,6 +34,16 @@ export const InventoryDrawerContent: React.ComponentType = () => {
   });
 
   const [openAddProductForm, setOpenAddProductForm] = React.useState(false);
+
+  // The scrollable element for your list
+  const parentRef = React.useRef(null);
+
+  // The virtualizer
+  const rowVirtualizer = useVirtualizer({
+    count: products.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 36,
+  });
 
   return (
     <React.Fragment>
@@ -66,19 +77,54 @@ export const InventoryDrawerContent: React.ComponentType = () => {
         </Drawer>
       </section>
 
-      <ScrollArea className="h-[60vh]">
-        <div className="flex flex-col">
-          {products.length <= 0 ? (
-            <TypographyMuted className="text-center">
-              No products in inventory
-            </TypographyMuted>
-          ) : (
-            products.map((product) => (
-              <InventoryProductListItem product={product} key={product.id} />
-            ))
-          )}
+      {products.length <= 0 && (
+        <TypographyMuted className="text-center">
+          No products in inventory
+        </TypographyMuted>
+      )}
+
+      {/* The scrollable element for your list */}
+      <div
+        ref={parentRef}
+        style={{
+          height: `60vh`,
+          overflow: "auto", // Make it scroll!
+        }}
+      >
+        {/* The large inner element to hold all of the items */}
+        <div
+          style={{
+            height: `${rowVirtualizer.getTotalSize()}px`,
+            width: "100%",
+            position: "relative",
+          }}
+        >
+          {/* Only the visible items in the virtualizer, manually positioned to be in view */}
+          {rowVirtualizer.getVirtualItems().map((virtualItem) => {
+            const product = products[virtualItem.index];
+
+            if (!product) {
+              return null;
+            }
+
+            return (
+              <div
+                key={virtualItem.key}
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: `${virtualItem.size}px`,
+                  transform: `translateY(${virtualItem.start}px)`,
+                }}
+              >
+                <InventoryProductListItem product={product} />
+              </div>
+            );
+          })}
         </div>
-      </ScrollArea>
+      </div>
     </React.Fragment>
   );
 };
