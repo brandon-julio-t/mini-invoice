@@ -86,47 +86,49 @@ export const BackupRestoreSection = () => {
           <Wand2Icon /> Backup & Restore
         </Button>
       </DrawerTrigger>
-      <DrawerContent className="flex flex-col gap-2 px-4 pb-4">
+      <DrawerContent className="pb-4">
         <DrawerHeader>
           <DrawerTitle>Backup & Restore</DrawerTitle>
           <DrawerDescription>Backup and restore your data</DrawerDescription>
         </DrawerHeader>
 
-        <Button variant="outline" onClick={onBackup}>
-          <DatabaseBackupIcon />
-          Backup
-        </Button>
+        <div className="flex flex-col gap-2 px-4">
+          <Button variant="outline" onClick={onBackup}>
+            <DatabaseBackupIcon />
+            Backup
+          </Button>
 
-        <Drawer>
-          <DrawerTrigger asChild>
-            <Button variant="outline">
-              <ArchiveRestoreIcon />
-              Restore
-            </Button>
-          </DrawerTrigger>
-          <DrawerContent className="pb-4">
-            <DrawerHeader>
-              <DrawerTitle>Restore</DrawerTitle>
-              <DrawerDescription>
-                Paste the copied text from backup button
-              </DrawerDescription>
-            </DrawerHeader>
+          <Drawer>
+            <DrawerTrigger asChild>
+              <Button variant="outline">
+                <ArchiveRestoreIcon />
+                Restore
+              </Button>
+            </DrawerTrigger>
+            <DrawerContent className="pb-4">
+              <DrawerHeader>
+                <DrawerTitle>Restore</DrawerTitle>
+                <DrawerDescription>
+                  Paste the copied text from backup button
+                </DrawerDescription>
+              </DrawerHeader>
 
-            <ScrollArea>
-              <div className="h-32">
-                <Textarea
-                  value={restoreText}
-                  onChange={(e) => setRestoreText(e.target.value)}
-                  className="h-32 resize-none"
-                />
-              </div>
-            </ScrollArea>
+              <ScrollArea>
+                <div className="h-32 px-4">
+                  <Textarea
+                    value={restoreText}
+                    onChange={(e) => setRestoreText(e.target.value)}
+                    className="h-32 resize-none"
+                  />
+                </div>
+              </ScrollArea>
 
-            <DrawerFooter>
-              <Button onClick={onRestore}>Restore</Button>
-            </DrawerFooter>
-          </DrawerContent>
-        </Drawer>
+              <DrawerFooter>
+                <Button onClick={onRestore}>Restore</Button>
+              </DrawerFooter>
+            </DrawerContent>
+          </Drawer>
+        </div>
       </DrawerContent>
     </Drawer>
   );
