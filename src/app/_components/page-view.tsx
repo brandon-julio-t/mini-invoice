@@ -79,7 +79,7 @@ export const PageView = () => {
     });
 
   return (
-    <main className="container my-4 max-w-screen-lg">
+    <main className="container my-4 max-w-sm">
       <Form {...form}>
         <form onSubmit={onSubmit} className="flex flex-col gap-4">
           <Card>
