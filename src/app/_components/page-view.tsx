@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import {
   Card,
+  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
@@ -21,6 +22,16 @@ import { toast } from "sonner";
 import { type z } from "zod";
 import { CustomerFormSection } from "./customer-form-section";
 import { ProductsFormSection } from "./products-form-section";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { BackupRestoreSection } from "./backup-restore-section";
 
 export const PageView = () => {
   const form = useForm<z.infer<typeof createInvoiceSchema>>({
@@ -79,7 +90,7 @@ export const PageView = () => {
     });
 
   return (
-    <main className="container my-4 max-w-sm">
+    <main className="container my-4">
       <Form {...form}>
         <form onSubmit={onSubmit} className="flex flex-col gap-4">
           <Card>
@@ -91,6 +102,10 @@ export const PageView = () => {
                 </TypographyMuted>
               </CardDescription>
             </CardHeader>
+
+            <CardContent>
+              <BackupRestoreSection />
+            </CardContent>
           </Card>
 
           <CustomerFormSection
