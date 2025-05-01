@@ -96,7 +96,7 @@ export const CustomerFormSection: React.ComponentType<{
                     </Button>
                   </FormControl>
                 </PopoverTrigger>
-                <PopoverContent className="!w-(--radix-popover-trigger-width) p-0">
+                <PopoverContent className="p-0">
                   <Command shouldFilter={false}>
                     <CommandInput
                       value={searchCustomerName}
