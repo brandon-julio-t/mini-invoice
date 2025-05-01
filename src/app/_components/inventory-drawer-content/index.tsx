@@ -7,17 +7,20 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
+import { Input } from "@/components/ui/input";
 import { TypographyMuted } from "@/components/ui/typography";
 import { useGetAllProductsQuery } from "@/service/product";
 import { useGetAllProductInventoriesQuery } from "@/service/product-inventory";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { PlusIcon } from "lucide-react";
+import { SearchIcon } from "lucide-react";
 import React from "react";
 import { InventoryDrawerAddProductForm } from "./add-product-form";
 import { InventoryProductListItem } from "./list-item";
 
 export const InventoryDrawerContent: React.ComponentType = () => {
-  const getAllProductsQuery = useGetAllProductsQuery();
+  const [name, setName] = React.useState("");
+  const deferredSearch = React.useDeferredValue(name);
+  const getAllProductsQuery = useGetAllProductsQuery({ q: deferredSearch });
 
   const getAllProductInventoriesQuery = useGetAllProductInventoriesQuery();
 
@@ -51,36 +54,52 @@ export const InventoryDrawerContent: React.ComponentType = () => {
         <DrawerDescription>Manage your inventory here</DrawerDescription>
       </DrawerHeader>
 
-      <section className="mb-2 flex justify-end px-2">
-        <Drawer open={openAddProductForm} onOpenChange={setOpenAddProductForm}>
-          <DrawerTrigger asChild>
-            <Button variant="outline">
-              <PlusIcon />
-              Add Product
-            </Button>
-          </DrawerTrigger>
-          <DrawerContent>
-            <DrawerHeader>
-              <DrawerTitle>Add Product</DrawerTitle>
-              <DrawerDescription>
-                Add a new product to your inventory
-              </DrawerDescription>
-            </DrawerHeader>
+      <div className="relative mx-2 mb-2">
+        <SearchIcon className="text-muted-foreground absolute top-1/2 left-2.5 size-(--text-base) -translate-y-1/2" />
+        <Input
+          className="pl-8"
+          type="search"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Search product..."
+        />
+      </div>
 
-            <InventoryDrawerAddProductForm
-              onSuccess={() => {
-                setOpenAddProductForm(false);
-              }}
-            />
-          </DrawerContent>
-        </Drawer>
-      </section>
+      <Drawer open={openAddProductForm} onOpenChange={setOpenAddProductForm}>
+        {products.length <= 0 && (
+          <div className="px-2">
+            {name ? (
+              <DrawerTrigger asChild>
+                <Button variant="outline" className="w-full">
+                  Add &quot;{name}&quot;
+                </Button>
+              </DrawerTrigger>
+            ) : (
+              <DrawerTrigger asChild>
+                <Button variant="outline" className="w-full" disabled>
+                  No products found in inventory
+                </Button>
+              </DrawerTrigger>
+            )}
+          </div>
+        )}
 
-      {products.length <= 0 && (
-        <TypographyMuted className="text-center">
-          No products in inventory
-        </TypographyMuted>
-      )}
+        <DrawerContent>
+          <DrawerHeader>
+            <DrawerTitle>Add Product</DrawerTitle>
+            <DrawerDescription>
+              Add a new product to your inventory
+            </DrawerDescription>
+          </DrawerHeader>
+
+          <InventoryDrawerAddProductForm
+            defaultName={name}
+            onSuccess={() => {
+              setOpenAddProductForm(false);
+            }}
+          />
+        </DrawerContent>
+      </Drawer>
 
       {/* The scrollable element for your list */}
       <div

@@ -22,13 +22,14 @@ const formSchema = z.object({
 });
 
 export const InventoryDrawerAddProductForm: React.ComponentType<{
+  defaultName: string;
   onSuccess: () => void;
-}> = ({ onSuccess }) => {
+}> = ({ defaultName, onSuccess }) => {
   const form = useForm<z.infer<typeof formSchema>>({
     mode: "onTouched",
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
+      name: defaultName,
       inventoryQuantity: 0,
     },
   });
