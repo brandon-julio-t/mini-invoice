@@ -117,7 +117,7 @@ export const ChooseProductDrawerContent: React.ComponentType<{
         className="pt-2"
         style={{
           height: `60vh`,
-          overflow: "auto", // Make it scroll!
+          overflowY: "auto", // Make it scroll!
         }}
       >
         {/* The large inner element to hold all of the items */}
