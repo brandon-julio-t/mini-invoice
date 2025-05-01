@@ -77,12 +77,12 @@ export const PageView = () => {
         .toLocaleString(),
   ].join("\n");
 
-  const onAddProductRow = () =>
-    fieldArray.append({
-      productName: "",
-      price: 0,
-      quantity: 0,
-    });
+  const onAddProductRow = () => {
+    fieldArray.append(
+      { productName: "", price: 0, quantity: 0 },
+      { shouldFocus: false },
+    );
+  };
 
   return (
     <main className="container my-4">
