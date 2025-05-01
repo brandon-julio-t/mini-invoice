@@ -58,3 +58,29 @@ export const useUpsertProductInventoryMutation = () => {
     },
   });
 };
+
+export const useDeleteProductInventoryByProductIdMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (params: { productId: string }) => {
+      const productInventories = JSON.parse(
+        localStorage.getItem("productInventories") ?? "[]",
+      ) as ProductInventory[];
+
+      const filteredProductInventories = productInventories.filter(
+        (productInventory) => productInventory.productId !== params.productId,
+      );
+
+      localStorage.setItem(
+        "productInventories",
+        JSON.stringify(filteredProductInventories),
+      );
+
+      return { data: filteredProductInventories };
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["productInventories"] });
+    },
+  });
+};

@@ -68,3 +68,29 @@ export const useUpsertProductPriceMutation = () => {
     },
   });
 };
+
+export const useDeleteProductPriceByProductIdMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (params: { productId: string }) => {
+      const productPrices = JSON.parse(
+        localStorage.getItem("productPrices") ?? "[]",
+      ) as ProductPrice[];
+
+      const filteredProductPrices = productPrices.filter(
+        (productPrice) => productPrice.productId !== params.productId,
+      );
+
+      localStorage.setItem(
+        "productPrices",
+        JSON.stringify(filteredProductPrices),
+      );
+
+      return { data: filteredProductPrices };
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["productPrices"] });
+    },
+  });
+};
