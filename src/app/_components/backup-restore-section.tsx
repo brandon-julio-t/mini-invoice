@@ -87,7 +87,7 @@ export const BackupRestoreSection = () => {
             Restore
           </Button>
         </DialogTrigger>
-        <DialogContent>
+        <DialogContent className="max-h-screen overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Restore</DialogTitle>
             <DialogDescription>
@@ -98,6 +98,7 @@ export const BackupRestoreSection = () => {
           <Textarea
             value={restoreText}
             onChange={(e) => setRestoreText(e.target.value)}
+            className="max-h-64 resize-none"
           />
 
           <DialogFooter>
