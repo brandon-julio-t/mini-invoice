@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { Form } from "@/components/ui/form";
 import { TypographyMuted } from "@/components/ui/typography";
 import {
@@ -15,18 +16,16 @@ import {
   useCreateInvoiceMutation,
 } from "@/service/invoice";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { BoxIcon, CopyIcon } from "lucide-react";
+import { BoxIcon } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { type z } from "zod";
 import { BackupRestoreSection } from "./backup-restore-section";
 import { CustomerFormSection } from "./customer-form-section";
-import { ProductsFormSection } from "./products-form-section";
-import { DrawerContent } from "@/components/ui/drawer";
-import { DrawerTrigger } from "@/components/ui/drawer";
-import { Drawer } from "@/components/ui/drawer";
 import { InventoryDrawerContent } from "./inventory-drawer-content";
+import { ProductsFormSection } from "./products-form-section";
+import { ReceiptSection } from "./receipt-section";
 
 export const PageView = () => {
   const form = useForm<z.infer<typeof createInvoiceSchema>>({
@@ -51,31 +50,6 @@ export const PageView = () => {
       })
       .unwrap();
   });
-
-  const receipt = [
-    "Receipt",
-    "-".repeat(32),
-    "Customer: " + form.getValues("customerName"),
-    "-".repeat(32),
-    "Invoice Items:",
-    ...(form.watch("invoiceItems")?.map((invoiceItem) => {
-      const price = Number(invoiceItem.price);
-      const quantity = Number(invoiceItem.quantity);
-      const total = price * quantity;
-
-      return `${invoiceItem.productName} Rp. ${price.toLocaleString()} x ${quantity.toLocaleString()} = Rp. ${total.toLocaleString()}`;
-    }) ?? []),
-    "-".repeat(32),
-    "Total: Rp. " +
-      form
-        .watch("invoiceItems")
-        ?.reduce(
-          (acc, invoiceItem) =>
-            acc + Number(invoiceItem.price) * Number(invoiceItem.quantity),
-          0,
-        )
-        .toLocaleString(),
-  ].join("\n");
 
   const onAddProductRow = () => {
     fieldArray.append(
@@ -151,33 +125,7 @@ export const PageView = () => {
                   onAddProductRow={onAddProductRow}
                 />
 
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex flex-row items-center justify-between">
-                      <div>Receipt</div>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="icon"
-                        onClick={async () => {
-                          try {
-                            await navigator.clipboard.writeText(receipt);
-                            toast.success("Copied to clipboard");
-                          } catch (error) {
-                            console.error(error);
-                            toast.error("Failed to copy to clipboard");
-                          }
-                        }}
-                      >
-                        <CopyIcon />
-                      </Button>
-                    </CardTitle>
-
-                    <section className="font-mono whitespace-pre-wrap">
-                      {receipt}
-                    </section>
-                  </CardHeader>
-                </Card>
+                <ReceiptSection form={form} />
               </motion.div>
             )}
           </AnimatePresence>
