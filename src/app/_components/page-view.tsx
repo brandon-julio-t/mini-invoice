@@ -15,7 +15,7 @@ import {
   useCreateInvoiceMutation,
 } from "@/service/invoice";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CopyIcon } from "lucide-react";
+import { BoxIcon, CopyIcon } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -23,6 +23,10 @@ import { type z } from "zod";
 import { BackupRestoreSection } from "./backup-restore-section";
 import { CustomerFormSection } from "./customer-form-section";
 import { ProductsFormSection } from "./products-form-section";
+import { DrawerContent } from "@/components/ui/drawer";
+import { DrawerTrigger } from "@/components/ui/drawer";
+import { Drawer } from "@/components/ui/drawer";
+import { InventoryDrawerContent } from "./inventory-drawer-content";
 
 export const PageView = () => {
   const form = useForm<z.infer<typeof createInvoiceSchema>>({
@@ -94,7 +98,19 @@ export const PageView = () => {
               </CardDescription>
             </CardHeader>
 
-            <CardContent>
+            <CardContent className="flex flex-col gap-2">
+              <Drawer>
+                <DrawerTrigger asChild>
+                  <Button variant="outline">
+                    <BoxIcon />
+                    Inventory
+                  </Button>
+                </DrawerTrigger>
+                <DrawerContent>
+                  <InventoryDrawerContent />
+                </DrawerContent>
+              </Drawer>
+
               <BackupRestoreSection />
             </CardContent>
           </Card>

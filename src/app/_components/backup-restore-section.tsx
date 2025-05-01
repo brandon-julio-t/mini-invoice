@@ -8,6 +8,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
 import { type Customer, useGetAllCustomersQuery } from "@/service/customer";
 import { type Product, useGetAllProductsQuery } from "@/service/product";
@@ -19,7 +29,11 @@ import {
   type ProductPrice,
   useGetAllProductPricesQuery,
 } from "@/service/product-price";
-import { ArchiveRestoreIcon, DatabaseBackupIcon } from "lucide-react";
+import {
+  ArchiveRestoreIcon,
+  DatabaseBackupIcon,
+  Wand2Icon,
+} from "lucide-react";
 import React from "react";
 import { toast } from "sonner";
 
@@ -74,6 +88,57 @@ export const BackupRestoreSection = () => {
     window.location.reload();
   };
 
+  return (
+    <Drawer>
+      <DrawerTrigger asChild>
+        <Button variant="outline">
+          <Wand2Icon /> Backup & Restore
+        </Button>
+      </DrawerTrigger>
+      <DrawerContent className="flex flex-col gap-2 px-4 pb-4">
+        <DrawerHeader>
+          <DrawerTitle>Backup & Restore</DrawerTitle>
+          <DrawerDescription>Backup and restore your data</DrawerDescription>
+        </DrawerHeader>
+
+        <Button variant="outline" onClick={onBackup}>
+          <DatabaseBackupIcon />
+          Backup
+        </Button>
+
+        <Drawer>
+          <DrawerTrigger asChild>
+            <Button variant="outline">
+              <ArchiveRestoreIcon />
+              Restore
+            </Button>
+          </DrawerTrigger>
+          <DrawerContent className="px-4 pb-4">
+            <DrawerHeader>
+              <DrawerTitle>Restore</DrawerTitle>
+              <DrawerDescription>
+                Paste the copied text from backup button
+              </DrawerDescription>
+            </DrawerHeader>
+
+            <ScrollArea>
+              <div className="h-32">
+                <Textarea
+                  value={restoreText}
+                  onChange={(e) => setRestoreText(e.target.value)}
+                  className="h-32 resize-none"
+                />
+              </div>
+            </ScrollArea>
+
+            <DrawerFooter>
+              <Button onClick={onRestore}>Restore</Button>
+            </DrawerFooter>
+          </DrawerContent>
+        </Drawer>
+      </DrawerContent>
+    </Drawer>
+  );
   return (
     <div className="flex flex-col gap-2">
       <Button variant="outline" onClick={onBackup}>
