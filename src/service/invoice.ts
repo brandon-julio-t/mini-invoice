@@ -5,6 +5,10 @@ import { z } from "zod";
 import { useCreateCustomerMutation } from "./customer";
 import { useCreateProductMutation } from "./product";
 import { useUpsertProductPriceMutation } from "./product-price";
+import {
+  useGetAllProductInventoriesQuery,
+  useUpsertProductInventoryMutation,
+} from "./product-inventory";
 
 interface Invoice {
   id: string;
@@ -38,6 +42,8 @@ export const useCreateInvoiceMutation = () => {
   const createCustomerMutation = useCreateCustomerMutation();
   const createProductMutation = useCreateProductMutation();
   const upsertProductPriceMutation = useUpsertProductPriceMutation();
+  const getAllProductInventoriesQuery = useGetAllProductInventoriesQuery();
+  const upsertProductInventoryMutation = useUpsertProductInventoryMutation();
 
   return useMutation({
     mutationFn: async (params: z.infer<typeof createInvoiceSchema>) => {
@@ -62,7 +68,9 @@ export const useCreateInvoiceMutation = () => {
 
       invoices.push(createdInvoice);
 
-      localStorage.setItem("invoices", JSON.stringify(invoices));
+      // NOTE: no need to save historical invoices
+      // afraid user's local storage will explode
+      // localStorage.setItem("invoices", JSON.stringify(invoices));
 
       const createdInvoiceItems: InvoiceItem[] = [];
 
@@ -83,6 +91,16 @@ export const useCreateInvoiceMutation = () => {
           price: invoiceItem.price,
         });
 
+        const currentQuantity =
+          getAllProductInventoriesQuery.data?.data.find(
+            (inventory) => inventory.productId === productId,
+          )?.currentQuantity ?? 0;
+
+        await upsertProductInventoryMutation.mutateAsync({
+          productId,
+          finalQuantity: currentQuantity - invoiceItem.quantity,
+        });
+
         createdInvoiceItems.push({
           productId,
           invoiceId: createdInvoice.id,
@@ -97,7 +115,9 @@ export const useCreateInvoiceMutation = () => {
 
       invoiceItems.push(...createdInvoiceItems);
 
-      localStorage.setItem("invoiceItems", JSON.stringify(invoiceItems));
+      // NOTE: no need to save historical invoice items
+      // afraid user's local storage will explode
+      // localStorage.setItem("invoiceItems", JSON.stringify(invoiceItems));
 
       return { data: createdInvoice };
     },
