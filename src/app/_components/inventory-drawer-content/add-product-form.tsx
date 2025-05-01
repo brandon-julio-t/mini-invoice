@@ -44,9 +44,9 @@ export const InventoryDrawerAddProductForm: React.ComponentType<{
           name: data.name,
         }),
         {
-          loading: "Creating product...",
-          success: "Product created successfully",
-          error: "Failed to create product",
+          loading: `Creating product "${data.name}"...`,
+          success: `Product "${data.name}" created successfully`,
+          error: `Failed to create product "${data.name}"`,
         },
       )
       .unwrap();
@@ -58,9 +58,9 @@ export const InventoryDrawerAddProductForm: React.ComponentType<{
           finalQuantity: data.inventoryQuantity,
         }),
         {
-          loading: "Creating product inventory...",
-          success: "Product inventory created successfully",
-          error: "Failed to create product inventory",
+          loading: `Creating product inventory for "${data.name}"...`,
+          success: `Product inventory for "${data.name}" created successfully`,
+          error: `Failed to create product inventory for "${data.name}"`,
         },
       )
       .unwrap();

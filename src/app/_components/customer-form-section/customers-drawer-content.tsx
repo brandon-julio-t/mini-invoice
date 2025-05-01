@@ -33,9 +33,9 @@ export const CustomersDrawerContent: React.ComponentType<{
           name: searchCustomerName,
         }),
         {
-          loading: "Creating customer...",
-          success: "Customer created successfully",
-          error: "Failed to create customer",
+          loading: `Creating customer "${searchCustomerName}"...`,
+          success: `Customer "${searchCustomerName}" created successfully`,
+          error: `Failed to create customer "${searchCustomerName}"`,
         },
       )
       .unwrap();
