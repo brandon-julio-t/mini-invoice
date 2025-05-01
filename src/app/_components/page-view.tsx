@@ -20,18 +20,9 @@ import { AnimatePresence, motion } from "motion/react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { type z } from "zod";
+import { BackupRestoreSection } from "./backup-restore-section";
 import { CustomerFormSection } from "./customer-form-section";
 import { ProductsFormSection } from "./products-form-section";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { BackupRestoreSection } from "./backup-restore-section";
 
 export const PageView = () => {
   const form = useForm<z.infer<typeof createInvoiceSchema>>({
