@@ -34,9 +34,9 @@ export const InventoryProductListItem: React.ComponentType<{
           productId: product.id,
         }),
         {
-          loading: "Deleting product...",
-          success: "Product deleted successfully",
-          error: "Failed to delete product",
+          loading: `Deleting product "${product.name}"...`,
+          success: `Product "${product.name}" deleted successfully`,
+          error: `Failed to delete product "${product.name}"`,
         },
       )
       .unwrap();
