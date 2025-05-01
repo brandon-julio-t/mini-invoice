@@ -18,6 +18,7 @@ import { type UseFieldArrayReturn, type UseFormReturn } from "react-hook-form";
 import { type z } from "zod";
 import { ChooseProductDrawer } from "./choose-product-drawer";
 import { ProductInventoryStockSection } from "./inventory/stock-section";
+import { ProductFieldArrayItem } from "./field-array-item";
 
 export const ProductsFormSection: React.ComponentType<{
   form: UseFormReturn<z.infer<typeof createInvoiceSchema>>;
@@ -57,105 +58,21 @@ export const ProductsFormSection: React.ComponentType<{
 
   return (
     <Card>
-      <AnimatePresence>
-        {fieldArray.fields.map((field, index) => {
-          const hasSelectedProduct = !!form.watch(
-            `invoiceItems.${index}.productId`,
-          );
-
-          return (
-            <motion.div
+      <CardContent>
+        <AnimatePresence>
+          {fieldArray.fields.map((field, index) => (
+            <ProductFieldArrayItem
+              form={form}
               key={field._id}
-              initial={{
-                id: "initial",
-                opacity: 0,
-                scale: 0.98,
-                y: -8,
-                height: 0,
+              index={index}
+              onRemove={() => {
+                fieldArray.remove(index);
               }}
-              animate={{
-                id: "animate",
-                opacity: 1,
-                scale: 1,
-                y: 0,
-                height: "auto",
-              }}
-              exit={{
-                id: "exit",
-                opacity: 0,
-                scale: 0.98,
-                y: -8,
-                height: 0,
-              }}
-              onAnimationComplete={(def) => {
-                /** @docs https://github.com/orgs/react-hook-form/discussions/11379 */
-                const isExit =
-                  typeof def === "object" && "id" in def && def.id === "exit";
-
-                const isLastItem = index === fieldArray.fields.length - 1;
-
-                const shouldHandleFormAnimationBug =
-                  isExit && isLastItem && fieldArray.fields.length > 1;
-
-                if (shouldHandleFormAnimationBug) {
-                  fieldArray.remove(index);
-                }
-              }}
-            >
-              <CardContent className="border-b pb-6">
-                <div className="flex flex-col gap-2">
-                  <ChooseProductDrawer form={form} index={index} />
-
-                  {hasSelectedProduct && (
-                    <>
-                      <FormField
-                        control={form.control}
-                        name={`invoiceItems.${index}.price`}
-                        render={({ field }) => (
-                          <FormItem className="w-full">
-                            <FormLabel>Price</FormLabel>
-                            <FormControl>
-                              <Input {...field} type="number" />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name={`invoiceItems.${index}.quantity`}
-                        render={({ field }) => (
-                          <FormItem className="w-full">
-                            <FormLabel>Quantity</FormLabel>
-                            <FormControl>
-                              <Input {...field} type="number" />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <ProductInventoryStockSection form={form} index={index} />
-                    </>
-                  )}
-
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="icon"
-                    onClick={() => fieldArray.remove(index)}
-                    className="w-full min-w-9"
-                    disabled={fieldArray.fields.length === 1}
-                  >
-                    <TrashIcon />
-                  </Button>
-                </div>
-              </CardContent>
-            </motion.div>
-          );
-        })}
-      </AnimatePresence>
+              canRemove={fieldArray.fields.length > 1}
+            />
+          ))}
+        </AnimatePresence>
+      </CardContent>
 
       <CardFooter className="flex flex-col gap-2">
         <Button
