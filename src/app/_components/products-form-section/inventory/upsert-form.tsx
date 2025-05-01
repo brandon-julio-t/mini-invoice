@@ -1,25 +1,23 @@
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { TypographyMuted } from "@/components/ui/typography";
 import {
   upsertProductInventorySchema,
-  useGetAllProductInventoriesQuery,
   useUpsertProductInventoryMutation,
-  type ProductInventory,
 } from "@/service/product-inventory";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { TypographyMuted } from "@/components/ui/typography";
+import { type z } from "zod";
 
 export const ProductInventoryUpsertForm: React.ComponentType<{
   productId: string;
