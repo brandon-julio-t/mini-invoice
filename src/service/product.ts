@@ -7,15 +7,20 @@ export interface Product {
   name: string;
 }
 
-export const useGetAllProductsQuery = () => {
+export const useGetAllProductsQuery = (params: { q?: string } = {}) => {
   return useQuery({
-    queryKey: ["products"],
+    queryKey: ["products", params.q],
     queryFn: async () => {
       const products = JSON.parse(
         localStorage.getItem("products") ?? "[]",
       ) as Product[];
 
-      return { data: products };
+      const q = params.q?.toLowerCase() ?? "";
+      const filteredProducts = q
+        ? products.filter((product) => product.name.toLowerCase().includes(q))
+        : products;
+
+      return { data: filteredProducts };
     },
   });
 };

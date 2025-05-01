@@ -13,10 +13,12 @@ export interface Customer {
 }
 
 export interface GetAllCustomersQueryParams {
-  q: string;
+  q?: string;
 }
 
-export const useGetAllCustomersQuery = (params: GetAllCustomersQueryParams) => {
+export const useGetAllCustomersQuery = (
+  params: GetAllCustomersQueryParams = {},
+) => {
   return useQuery({
     queryKey: ["customers", params.q],
     queryFn: async () => {
@@ -24,9 +26,12 @@ export const useGetAllCustomersQuery = (params: GetAllCustomersQueryParams) => {
         localStorage.getItem("customers") ?? "[]",
       ) as Customer[];
 
-      const filteredCustomers = customers.filter((customer) =>
-        customer.name.toLowerCase().includes(params.q.toLowerCase()),
-      );
+      const q = params.q?.toLowerCase() ?? "";
+      const filteredCustomers = q
+        ? customers.filter((customer) =>
+            customer.name.toLowerCase().includes(q),
+          )
+        : customers;
 
       return { data: filteredCustomers };
     },
