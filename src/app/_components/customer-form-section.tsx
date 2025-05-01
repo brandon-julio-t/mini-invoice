@@ -96,7 +96,7 @@ export const CustomerFormSection: React.ComponentType<{
                     </Button>
                   </FormControl>
                 </PopoverTrigger>
-                <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
+                <PopoverContent className="!w-(--radix-popover-trigger-width) p-0">
                   <Command shouldFilter={false}>
                     <CommandInput
                       value={searchCustomerName}
@@ -107,20 +107,22 @@ export const CustomerFormSection: React.ComponentType<{
                       className="h-9"
                     />
                     <CommandList>
-                      <CommandEmpty>
-                        <TypographyMuted className="mb-4">
-                          No customer found
-                        </TypographyMuted>
-
-                        <Button
-                          variant="outline"
-                          onClick={onCreateCustomer}
-                          disabled={!searchCustomerName}
-                        >
-                          {searchCustomerName
-                            ? `Create customer: ${searchCustomerName}`
-                            : "Please type a customer name first"}
-                        </Button>
+                      <CommandEmpty className="px-6">
+                        {searchCustomerName ? (
+                          <Button
+                            variant="outline"
+                            onClick={onCreateCustomer}
+                            disabled={!searchCustomerName}
+                          >
+                            Add &quot;{searchCustomerName}&quot;
+                          </Button>
+                        ) : (
+                          <TypographyMuted>
+                            No customer found.
+                            <br />
+                            Type a customer name to add them.
+                          </TypographyMuted>
+                        )}
                       </CommandEmpty>
                       <CommandGroup>
                         {getAllCustomersQuery.data?.data.map((customer) => (

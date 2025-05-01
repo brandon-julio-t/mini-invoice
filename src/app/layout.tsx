@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   description: "Invoice App",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
+import { MotionConfig } from "motion/react";
 
 export default function RootLayout({
   children,
@@ -19,7 +20,7 @@ export default function RootLayout({
     <html lang="en" className={`${GeistSans.variable}`}>
       <body>
         <TRPCReactProvider>
-          {children}
+          <MotionConfig reducedMotion="user">{children}</MotionConfig>
           <Toaster />
         </TRPCReactProvider>
       </body>

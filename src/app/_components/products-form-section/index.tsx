@@ -1,14 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import {
   FormControl,
   FormField,
@@ -37,15 +30,6 @@ export const ProductsFormSection: React.ComponentType<{
 }> = ({ form, fieldArray, onAddProductRow }) => {
   return (
     <Card>
-      {fieldArray.fields.length <= 0 && (
-        <CardHeader>
-          <CardTitle className="text-center">No products</CardTitle>
-          <CardDescription className="text-center">
-            Please add at least one product
-          </CardDescription>
-        </CardHeader>
-      )}
-
       {fieldArray.fields.map((field, index) => {
         return (
           <React.Fragment key={field._id}>
@@ -84,6 +68,7 @@ export const ProductsFormSection: React.ComponentType<{
                 <ProductInventoryStockSection form={form} index={index} />
 
                 <Button
+                  type="button"
                   variant="outline"
                   size="icon"
                   onClick={() => fieldArray.remove(index)}

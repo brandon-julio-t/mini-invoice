@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
@@ -16,6 +15,7 @@ import {
 } from "@/service/invoice";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CopyIcon } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { type z } from "zod";
@@ -100,39 +100,65 @@ export const PageView = () => {
             }}
           />
 
-          <ProductsFormSection
-            form={form}
-            fieldArray={fieldArray}
-            onAddProductRow={onAddProductRow}
-          />
+          <AnimatePresence>
+            {form.watch("customerId") && (
+              <motion.div
+                initial={{
+                  translateY: -8,
+                  scale: 0.98,
+                  opacity: 0,
+                  filter: "blur(4px)",
+                }}
+                animate={{
+                  translateY: 0,
+                  scale: 1,
+                  opacity: 1,
+                  filter: "blur(0px)",
+                }}
+                exit={{
+                  translateY: -8,
+                  scale: 0.98,
+                  opacity: 0,
+                  filter: "blur(4px)",
+                }}
+                className="flex flex-col gap-4"
+              >
+                <ProductsFormSection
+                  form={form}
+                  fieldArray={fieldArray}
+                  onAddProductRow={onAddProductRow}
+                />
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex flex-row items-center justify-between">
-                <div>Receipt</div>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="icon"
-                  onClick={async () => {
-                    try {
-                      await navigator.clipboard.writeText(receipt);
-                      toast.success("Copied to clipboard");
-                    } catch (error) {
-                      console.error(error);
-                      toast.error("Failed to copy to clipboard");
-                    }
-                  }}
-                >
-                  <CopyIcon />
-                </Button>
-              </CardTitle>
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex flex-row items-center justify-between">
+                      <div>Receipt</div>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="icon"
+                        onClick={async () => {
+                          try {
+                            await navigator.clipboard.writeText(receipt);
+                            toast.success("Copied to clipboard");
+                          } catch (error) {
+                            console.error(error);
+                            toast.error("Failed to copy to clipboard");
+                          }
+                        }}
+                      >
+                        <CopyIcon />
+                      </Button>
+                    </CardTitle>
 
-              <section className="whitespace-pre-wrap font-mono">
-                {receipt}
-              </section>
-            </CardHeader>
-          </Card>
+                    <section className="font-mono whitespace-pre-wrap">
+                      {receipt}
+                    </section>
+                  </CardHeader>
+                </Card>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </form>
       </Form>
     </main>

@@ -16,6 +16,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { TypographyMuted } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
 import { type createInvoiceSchema } from "@/service/invoice";
 import {
@@ -91,7 +92,7 @@ export const ProductCombobox: React.ComponentType<{
               </Button>
             </FormControl>
           </PopoverTrigger>
-          <PopoverContent className="p-0">
+          <PopoverContent className="w-(--radix-popover-trigger-width) p-0">
             <Command>
               <FormControl>
                 <CommandInput
@@ -100,10 +101,18 @@ export const ProductCombobox: React.ComponentType<{
                 />
               </FormControl>
               <CommandList>
-                <CommandEmpty>
-                  <Button variant="outline" onClick={onAddNewProduct}>
-                    Add {name}
-                  </Button>
+                <CommandEmpty className="px-6">
+                  {name ? (
+                    <Button variant="outline" onClick={onAddNewProduct}>
+                      Add &quot;{name}&quot;
+                    </Button>
+                  ) : (
+                    <TypographyMuted>
+                      No product found.
+                      <br />
+                      Type a product name to add it.
+                    </TypographyMuted>
+                  )}
                 </CommandEmpty>
                 <CommandGroup>
                   {getAllProductsQuery.data?.data.map((product) => (

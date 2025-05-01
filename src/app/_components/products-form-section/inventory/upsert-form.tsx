@@ -39,7 +39,7 @@ export const ProductInventoryUpsertForm: React.ComponentType<{
     await upsertProductInventoryMutation.mutateAsync(data);
 
     toast.success(
-      `${productName} initial stock has been updated to ${data.finalQuantity.toLocaleString()}`,
+      `${productName} current stock has been updated to ${data.finalQuantity.toLocaleString()}`,
     );
 
     onUpsertSuccess();
@@ -49,7 +49,7 @@ export const ProductInventoryUpsertForm: React.ComponentType<{
     <Form {...form}>
       <form onSubmit={onSubmit} className="flex flex-col gap-4">
         <header>
-          <TypographyMuted className="text-sm text-muted-foreground">
+          <TypographyMuted className="text-muted-foreground text-sm">
             Current Quantity: {currentQuantity}
           </TypographyMuted>
         </header>

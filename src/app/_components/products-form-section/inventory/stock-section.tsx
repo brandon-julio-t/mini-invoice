@@ -36,9 +36,7 @@ export const ProductInventoryStockSection: React.ComponentType<{
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button type="button" variant="outline" className="justify-between">
-            <span>
-              Initial Stock: {Number(currentQuantity).toLocaleString()}
-            </span>
+            Current Stock: {Number(currentQuantity).toLocaleString()}
             <PencilIcon />
           </Button>
         </PopoverTrigger>
