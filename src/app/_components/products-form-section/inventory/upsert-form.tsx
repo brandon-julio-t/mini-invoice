@@ -45,7 +45,7 @@ export const ProductInventoryUpsertForm: React.ComponentType<{
 
   return (
     <Form {...form}>
-      <form onSubmit={onSubmit} className="flex flex-col gap-4">
+      <form onSubmit={onSubmit} className="flex flex-col gap-4 px-4 pb-4">
         <header>
           <TypographyMuted className="text-muted-foreground text-sm">
             Current Quantity: {currentQuantity}

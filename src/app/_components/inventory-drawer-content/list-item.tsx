@@ -35,7 +35,7 @@ export const InventoryProductListItem: React.ComponentType<{
         </Button>
       </DrawerTrigger>
 
-      <DrawerContent className="container">
+      <DrawerContent>
         <DrawerHeader>
           <DrawerTitle>Inventory Details</DrawerTitle>
           <DrawerDescription>
