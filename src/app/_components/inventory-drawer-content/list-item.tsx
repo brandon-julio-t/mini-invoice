@@ -10,14 +10,13 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { SlidingNumber } from "@/components/ui/sliding-number";
-import { type Product } from "@/service/product";
+import { useDeleteProductMutation, type Product } from "@/service/product";
 import { type ProductInventory } from "@/service/product-inventory";
-import React from "react";
-import { ProductInventoryUpsertForm } from "../products-form-section/inventory/upsert-form";
-import { AnimatePresence, motion } from "motion/react";
 import { TrashIcon } from "lucide-react";
-import { useDeleteProductMutation } from "@/service/product";
+import { AnimatePresence, motion } from "motion/react";
+import React from "react";
 import { toast } from "sonner";
+import { ProductInventoryUpsertForm } from "../products-form-section/inventory/upsert-form";
 
 export const InventoryProductListItem: React.ComponentType<{
   product: Product & { productInventory: ProductInventory | undefined };
@@ -80,9 +79,9 @@ export const InventoryProductListItem: React.ComponentType<{
         <AnimatePresence>
           {showDelete && (
             <motion.div
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 40 }}
+              initial={{ opacity: 0, width: 0 }}
+              animate={{ opacity: 1, width: "auto" }}
+              exit={{ opacity: 0, width: 0 }}
             >
               <Drawer>
                 <DrawerTrigger asChild>
