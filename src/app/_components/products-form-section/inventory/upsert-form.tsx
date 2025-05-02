@@ -59,7 +59,7 @@ export const ProductInventoryUpsertForm: React.ComponentType<{
         </DrawerDescription>
       </DrawerHeader>
 
-      <form onSubmit={onSubmit} className="flex flex-col gap-4">
+      <form onSubmit={onSubmit}>
         <div className="px-4">
           <FormField
             control={form.control}
