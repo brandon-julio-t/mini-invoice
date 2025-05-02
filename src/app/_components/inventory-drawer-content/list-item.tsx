@@ -101,7 +101,7 @@ export const InventoryProductListItem: React.ComponentType<{
                       &quot;?
                     </DrawerDescription>
                   </DrawerHeader>
-                  <DrawerFooter>
+                  <DrawerFooter className="-mt-4">
                     <Button
                       variant="destructive"
                       onClick={onDeleteProductConfirmed}
