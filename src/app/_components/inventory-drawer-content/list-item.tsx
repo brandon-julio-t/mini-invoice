@@ -127,13 +127,6 @@ export const InventoryProductListItem: React.ComponentType<{
       </motion.div>
 
       <DrawerContent>
-        <DrawerHeader>
-          <DrawerTitle>Inventory Details</DrawerTitle>
-          <DrawerDescription>
-            Manage the inventory for &quot;{product.name}&quot;
-          </DrawerDescription>
-        </DrawerHeader>
-
         <ProductInventoryUpsertForm
           productId={product.id}
           productName={product.name}
