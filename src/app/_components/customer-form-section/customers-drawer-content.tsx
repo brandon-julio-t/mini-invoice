@@ -15,6 +15,7 @@ import {
 import { type createInvoiceSchema } from "@/service/invoice";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { CheckIcon, SearchIcon } from "lucide-react";
+import { nanoid } from "nanoid";
 import React from "react";
 import { type UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
@@ -51,7 +52,9 @@ export const CustomersDrawerContent: React.ComponentType<{
 
     form.setValue("customerId", response.data.id);
     form.setValue("customerName", response.data.name);
-    form.setValue("invoiceItems", []);
+    form.setValue("invoiceItems", [
+      { productName: "", price: 0, quantity: 0, _id: nanoid() },
+    ]);
 
     onCustomerSelected();
   };
@@ -150,15 +153,11 @@ export const CustomersDrawerContent: React.ComponentType<{
                   className="w-full justify-start"
                   size="lg"
                   onClick={() => {
-                    form.setValue("customerId", customer.id, {
-                      shouldValidate: true,
-                    });
-                    form.setValue("customerName", customer.name, {
-                      shouldValidate: true,
-                    });
-                    form.setValue("invoiceItems", [], {
-                      shouldValidate: true,
-                    });
+                    form.setValue("customerId", customer.id);
+                    form.setValue("customerName", customer.name);
+                    form.setValue("invoiceItems", [
+                      { productName: "", price: 0, quantity: 0, _id: nanoid() },
+                    ]);
                     onCustomerSelected();
                   }}
                 >

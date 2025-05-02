@@ -15,6 +15,7 @@ import React from "react";
 import { type UseFormReturn } from "react-hook-form";
 import { type z } from "zod";
 import { ChooseProductDrawerContent } from "./content";
+import { SlidingNumber } from "@/components/ui/sliding-number";
 
 export const ChooseProductDrawer: React.ComponentType<{
   form: UseFormReturn<z.infer<typeof createInvoiceSchema>>;
@@ -30,7 +31,12 @@ export const ChooseProductDrawer: React.ComponentType<{
       name={`invoiceItems.${index}.productId`}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Product</FormLabel>
+          <FormLabel>
+            Product
+            <span className="flex flex-row items-center">
+              #<SlidingNumber value={index + 1} />
+            </span>
+          </FormLabel>
 
           <Drawer open={open} onOpenChange={setOpen}>
             <DrawerTrigger asChild>

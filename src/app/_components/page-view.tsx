@@ -18,7 +18,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { BoxIcon } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { type z } from "zod";
 import { BackupRestoreSection } from "./backup-restore-section";
@@ -33,12 +33,6 @@ export const PageView = () => {
     resolver: zodResolver(createInvoiceSchema),
   });
 
-  const fieldArray = useFieldArray({
-    control: form.control,
-    name: "invoiceItems",
-    keyName: "_id",
-  });
-
   const createInvoiceMutation = useCreateInvoiceMutation();
 
   const onSubmit = form.handleSubmit(async (data) => {
@@ -50,13 +44,6 @@ export const PageView = () => {
       })
       .unwrap();
   });
-
-  const onAddProductRow = () => {
-    fieldArray.append(
-      { productName: "", price: 0, quantity: 0 },
-      { shouldFocus: false },
-    );
-  };
 
   return (
     <main className="container my-4">
@@ -89,12 +76,7 @@ export const PageView = () => {
             </CardContent>
           </Card>
 
-          <CustomerFormSection
-            form={form}
-            onCustomerSelected={() => {
-              onAddProductRow();
-            }}
-          />
+          <CustomerFormSection form={form} />
 
           <AnimatePresence>
             {form.watch("customerId") && (
@@ -119,11 +101,7 @@ export const PageView = () => {
                 }}
                 className="flex flex-col gap-4"
               >
-                <ProductsFormSection
-                  form={form}
-                  fieldArray={fieldArray}
-                  onAddProductRow={onAddProductRow}
-                />
+                <ProductsFormSection form={form} />
 
                 <ReceiptSection form={form} />
               </motion.div>

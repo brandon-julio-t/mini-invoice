@@ -5,20 +5,15 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { type createInvoiceSchema } from "@/service/invoice";
 import { CheckCircle2Icon, PlusIcon } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import { nanoid } from "nanoid";
 import React from "react";
-import { type UseFieldArrayReturn, type UseFormReturn } from "react-hook-form";
+import { type UseFormReturn } from "react-hook-form";
 import { type z } from "zod";
 import { ProductFieldArrayItem } from "./field-array-item";
 
 export const ProductsFormSection: React.ComponentType<{
   form: UseFormReturn<z.infer<typeof createInvoiceSchema>>;
-  fieldArray: UseFieldArrayReturn<
-    z.infer<typeof createInvoiceSchema>,
-    "invoiceItems",
-    "_id"
-  >;
-  onAddProductRow: () => void;
-}> = ({ form, fieldArray, onAddProductRow }) => {
+}> = ({ form }) => {
   const [submitButtomState, setSubmitButtomState] = React.useState<
     "idle" | "success"
   >("idle");
@@ -46,20 +41,51 @@ export const ProductsFormSection: React.ComponentType<{
     ],
   );
 
+  const items = form.watch("invoiceItems");
+
   return (
     <Card>
       <CardContent>
         <AnimatePresence>
-          {fieldArray.fields.map((field, index) => (
-            <ProductFieldArrayItem
-              form={form}
+          {items.map((field, index) => (
+            <motion.div
               key={field._id}
-              index={index}
-              onRemove={() => {
-                fieldArray.remove(index);
+              initial={{
+                opacity: 0,
+                scale: 0.98,
+                height: 0,
+                marginBottom: 0,
+                filter: "blur(2px)",
               }}
-              canRemove={fieldArray.fields.length > 1}
-            />
+              animate={{
+                opacity: 1,
+                scale: 1,
+                height: "auto",
+                marginBottom: 16,
+                filter: "blur(0px)",
+              }}
+              exit={{
+                id: "exit",
+                opacity: 0,
+                scale: 0.98,
+                height: 0,
+                marginBottom: 0,
+                filter: "blur(2px)",
+              }}
+            >
+              <ProductFieldArrayItem
+                form={form}
+                index={index}
+                onRemove={() => {
+                  const prev = form.getValues("invoiceItems");
+                  form.setValue(
+                    "invoiceItems",
+                    prev.filter((f) => f._id !== field._id),
+                  );
+                }}
+                canRemove={items.length > 1}
+              />
+            </motion.div>
           ))}
         </AnimatePresence>
       </CardContent>
@@ -69,7 +95,13 @@ export const ProductsFormSection: React.ComponentType<{
           type="button"
           variant="outline"
           disabled={!form.getValues("customerId")}
-          onClick={onAddProductRow}
+          onClick={() => {
+            const prev = form.getValues("invoiceItems");
+            form.setValue("invoiceItems", [
+              ...prev,
+              { productName: "", price: 0, quantity: 0, _id: nanoid() },
+            ]);
+          }}
           className="w-full"
         >
           <PlusIcon />

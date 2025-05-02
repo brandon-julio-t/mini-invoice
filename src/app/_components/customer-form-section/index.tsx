@@ -18,8 +18,7 @@ import { CustomersDrawerContent } from "./customers-drawer-content";
 
 export const CustomerFormSection: React.ComponentType<{
   form: UseFormReturn<z.infer<typeof createInvoiceSchema>>;
-  onCustomerSelected: () => void;
-}> = ({ form, onCustomerSelected }) => {
+}> = ({ form }) => {
   const name = form.watch("customerName");
 
   const [open, setOpen] = React.useState(false);
@@ -57,7 +56,6 @@ export const CustomerFormSection: React.ComponentType<{
                     selectedCustomerId={field.value ?? ""}
                     onCustomerSelected={() => {
                       setOpen(false);
-                      onCustomerSelected();
                     }}
                   />
                 </DrawerContent>

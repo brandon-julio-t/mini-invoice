@@ -22,18 +22,19 @@ interface InvoiceItem {
   quantity: number;
 }
 
+export const invoiceItemSchema = z.object({
+  productId: z.string().nullish(),
+  productName: z.string(),
+  price: z.coerce.number().min(1),
+  quantity: z.coerce.number().min(1),
+  _id: z.string(),
+});
+
 export const createInvoiceSchema = z.object({
   customerId: z.string().nullish(),
   customerName: z.string(),
 
-  invoiceItems: z.array(
-    z.object({
-      productId: z.string().nullish(),
-      productName: z.string(),
-      price: z.coerce.number().min(1),
-      quantity: z.coerce.number().min(1),
-    }),
-  ),
+  invoiceItems: z.array(invoiceItemSchema),
 });
 
 export const useCreateInvoiceMutation = () => {
