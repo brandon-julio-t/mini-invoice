@@ -1,7 +1,6 @@
 import React from "react";
 
 import { Button } from "@/components/ui/button";
-import { CardContent } from "@/components/ui/card";
 import {
   FormControl,
   FormField,
@@ -10,6 +9,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 import { type createInvoiceSchema } from "@/service/invoice";
 import { TrashIcon } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
@@ -17,7 +17,6 @@ import { type UseFormReturn } from "react-hook-form";
 import { type z } from "zod";
 import { ChooseProductDrawer } from "./choose-product-drawer";
 import { ProductInventoryStockSection } from "./inventory/stock-section";
-import { Separator } from "@/components/ui/separator";
 
 export const ProductFieldArrayItem: React.ComponentType<{
   form: UseFormReturn<z.infer<typeof createInvoiceSchema>>;

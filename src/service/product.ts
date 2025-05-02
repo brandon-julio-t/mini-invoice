@@ -1,11 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { nanoid } from "nanoid";
 import { z } from "zod";
-import {
-  useDeleteProductPriceByProductIdMutation,
-  useGetAllProductPricesQuery,
-} from "./product-price";
 import { useDeleteProductInventoryByProductIdMutation } from "./product-inventory";
+import { useDeleteProductPriceByProductIdMutation } from "./product-price";
 
 export interface Product {
   id: string;

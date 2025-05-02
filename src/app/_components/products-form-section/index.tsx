@@ -2,22 +2,12 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { type createInvoiceSchema } from "@/service/invoice";
-import { CheckCircle2Icon, PlusIcon, TrashIcon } from "lucide-react";
+import { CheckCircle2Icon, PlusIcon } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import React from "react";
 import { type UseFieldArrayReturn, type UseFormReturn } from "react-hook-form";
 import { type z } from "zod";
-import { ChooseProductDrawer } from "./choose-product-drawer";
-import { ProductInventoryStockSection } from "./inventory/stock-section";
 import { ProductFieldArrayItem } from "./field-array-item";
 
 export const ProductsFormSection: React.ComponentType<{
