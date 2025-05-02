@@ -1,14 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
+import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import {
   FormControl,
   FormField,
@@ -50,13 +43,6 @@ export const ChooseProductDrawer: React.ComponentType<{
               </FormControl>
             </DrawerTrigger>
             <DrawerContent>
-              <DrawerHeader>
-                <DrawerTitle>Choose Product</DrawerTitle>
-                <DrawerDescription>
-                  Choose a product to add to the invoice
-                </DrawerDescription>
-              </DrawerHeader>
-
               <ChooseProductDrawerContent
                 form={form}
                 index={index}

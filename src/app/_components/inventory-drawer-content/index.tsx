@@ -1,8 +1,10 @@
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
+  DrawerClose,
   DrawerContent,
   DrawerDescription,
+  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
@@ -51,63 +53,67 @@ export const InventoryDrawerContent: React.ComponentType = () => {
       <DrawerHeader>
         <DrawerTitle>Inventory</DrawerTitle>
         <DrawerDescription>Manage your inventory here</DrawerDescription>
-      </DrawerHeader>
 
-      <div className="relative mx-4">
-        <SearchIcon className="text-muted-foreground absolute top-1/2 left-2.5 size-(--text-base) -translate-y-1/2" />
-        <Input
-          className="pl-8"
-          type="search"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Search product..."
-        />
-      </div>
-
-      <Drawer open={openAddProductForm} onOpenChange={setOpenAddProductForm}>
-        {products.length <= 0 && (
-          <div className="mt-4 px-4">
-            {name ? (
-              <DrawerTrigger asChild>
-                <Button variant="outline" className="w-full">
-                  Add &quot;{name}&quot;
-                </Button>
-              </DrawerTrigger>
-            ) : (
-              <DrawerTrigger asChild>
-                <Button variant="outline" className="w-full" disabled>
-                  No products found in inventory
-                </Button>
-              </DrawerTrigger>
-            )}
-          </div>
-        )}
-
-        <DrawerContent>
-          <DrawerHeader>
-            <DrawerTitle>Add Product</DrawerTitle>
-            <DrawerDescription>
-              Add a new product to your inventory
-            </DrawerDescription>
-          </DrawerHeader>
-
-          <InventoryDrawerAddProductForm
-            defaultName={name}
-            onSuccess={() => {
-              setOpenAddProductForm(false);
-            }}
+        <div className="relative">
+          <SearchIcon className="text-muted-foreground absolute top-1/2 left-2.5 size-(--text-base) -translate-y-1/2" />
+          <Input
+            className="pl-8"
+            type="search"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Search product..."
           />
-        </DrawerContent>
-      </Drawer>
+        </div>
+      </DrawerHeader>
 
       {/* The scrollable element for your list */}
       <div
         ref={parentRef}
         style={{
-          height: `60vh`,
+          height: "60vh",
           overflowY: "auto", // Make it scroll!
         }}
+        className="border-y"
       >
+        {products.length <= 0 && (
+          <DrawerFooter>
+            <Drawer
+              open={openAddProductForm}
+              onOpenChange={setOpenAddProductForm}
+            >
+              {name ? (
+                <DrawerTrigger asChild>
+                  <Button variant="outline" className="w-full">
+                    Add &quot;{name}&quot;
+                  </Button>
+                </DrawerTrigger>
+              ) : (
+                <DrawerTrigger asChild>
+                  <Button variant="outline" className="w-full" disabled>
+                    No products found in inventory
+                  </Button>
+                </DrawerTrigger>
+              )}
+
+              <DrawerContent>
+                <DrawerHeader>
+                  <DrawerTitle>Add Product</DrawerTitle>
+                  <DrawerDescription>
+                    Add a new product to your inventory
+                  </DrawerDescription>
+                </DrawerHeader>
+
+                <InventoryDrawerAddProductForm
+                  defaultName={name}
+                  onSuccess={() => {
+                    setOpenAddProductForm(false);
+                  }}
+                />
+              </DrawerContent>
+            </Drawer>
+          </DrawerFooter>
+        )}
+
         {/* The large inner element to hold all of the items */}
         <div
           style={{
@@ -142,6 +148,12 @@ export const InventoryDrawerContent: React.ComponentType = () => {
           })}
         </div>
       </div>
+
+      <DrawerFooter>
+        <DrawerClose asChild>
+          <Button variant="outline">Close</Button>
+        </DrawerClose>
+      </DrawerFooter>
     </React.Fragment>
   );
 };

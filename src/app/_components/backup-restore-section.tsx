@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
+  DrawerClose,
   DrawerContent,
   DrawerDescription,
   DrawerFooter,
@@ -86,13 +87,13 @@ export const BackupRestoreSection = () => {
           <Wand2Icon /> Backup & Restore
         </Button>
       </DrawerTrigger>
-      <DrawerContent className="pb-4">
+      <DrawerContent>
         <DrawerHeader>
           <DrawerTitle>Backup & Restore</DrawerTitle>
           <DrawerDescription>Backup and restore your data</DrawerDescription>
         </DrawerHeader>
 
-        <div className="flex flex-col gap-2 px-4">
+        <DrawerFooter>
           <Button variant="outline" onClick={onBackup}>
             <DatabaseBackupIcon />
             Backup
@@ -105,7 +106,7 @@ export const BackupRestoreSection = () => {
                 Restore
               </Button>
             </DrawerTrigger>
-            <DrawerContent className="pb-4">
+            <DrawerContent>
               <DrawerHeader>
                 <DrawerTitle>Restore</DrawerTitle>
                 <DrawerDescription>
@@ -125,10 +126,17 @@ export const BackupRestoreSection = () => {
 
               <DrawerFooter>
                 <Button onClick={onRestore}>Restore</Button>
+                <DrawerClose asChild>
+                  <Button variant="outline">Close</Button>
+                </DrawerClose>
               </DrawerFooter>
             </DrawerContent>
           </Drawer>
-        </div>
+
+          <DrawerClose asChild>
+            <Button variant="outline">Close</Button>
+          </DrawerClose>
+        </DrawerFooter>
       </DrawerContent>
     </Drawer>
   );

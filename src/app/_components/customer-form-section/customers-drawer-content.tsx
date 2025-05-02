@@ -1,4 +1,11 @@
 import { Button } from "@/components/ui/button";
+import {
+  DrawerClose,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+} from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import {
@@ -61,48 +68,56 @@ export const CustomersDrawerContent: React.ComponentType<{
 
   return (
     <React.Fragment>
-      <div className="relative mx-4">
-        <SearchIcon className="text-muted-foreground absolute top-1/2 left-2.5 size-(--text-base) -translate-y-1/2" />
-        <Input
-          className="pl-8"
-          type="search"
-          value={searchCustomerName}
-          onChange={(e) => setSearchCustomerName(e.target.value)}
-          placeholder="Search customer..."
-        />
-      </div>
+      <DrawerHeader>
+        <DrawerTitle>Choose Customer</DrawerTitle>
+        <DrawerDescription>
+          Choose a customer to add to the invoice
+        </DrawerDescription>
 
-      {customers.length <= 0 && (
-        <div className="mt-4 px-4">
-          {searchCustomerName ? (
-            <Button
-              variant="outline"
-              onClick={onCreateCustomer}
-              className="w-full"
-            >
-              Add &quot;{searchCustomerName}&quot;
-            </Button>
-          ) : (
-            <Button
-              variant="outline"
-              onClick={onCreateCustomer}
-              className="w-full"
-              disabled
-            >
-              No customers found
-            </Button>
-          )}
+        <div className="relative">
+          <SearchIcon className="text-muted-foreground absolute top-1/2 left-2.5 size-(--text-base) -translate-y-1/2" />
+          <Input
+            className="pl-8"
+            type="search"
+            value={searchCustomerName}
+            onChange={(e) => setSearchCustomerName(e.target.value)}
+            placeholder="Search customer..."
+          />
         </div>
-      )}
+      </DrawerHeader>
 
       {/* The scrollable element for your list */}
       <div
         ref={parentRef}
         style={{
-          height: `60vh`,
+          height: "60vh",
           overflowY: "auto", // Make it scroll!
         }}
+        className="border-y"
       >
+        {customers.length <= 0 && (
+          <DrawerFooter>
+            {searchCustomerName ? (
+              <Button
+                variant="outline"
+                onClick={onCreateCustomer}
+                className="w-full"
+              >
+                Add &quot;{searchCustomerName}&quot;
+              </Button>
+            ) : (
+              <Button
+                variant="outline"
+                onClick={onCreateCustomer}
+                className="w-full"
+                disabled
+              >
+                No customers found
+              </Button>
+            )}
+          </DrawerFooter>
+        )}
+
         {/* The large inner element to hold all of the items */}
         <div
           style={{
@@ -162,6 +177,12 @@ export const CustomersDrawerContent: React.ComponentType<{
           })}
         </div>
       </div>
+
+      <DrawerFooter>
+        <DrawerClose asChild>
+          <Button variant="outline">Close</Button>
+        </DrawerClose>
+      </DrawerFooter>
     </React.Fragment>
   );
 };

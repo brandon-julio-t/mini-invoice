@@ -1,13 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader } from "@/components/ui/card";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
+import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import {
   FormControl,
   FormField,
@@ -59,13 +52,6 @@ export const CustomerFormSection: React.ComponentType<{
                   </FormControl>
                 </DrawerTrigger>
                 <DrawerContent>
-                  <DrawerHeader>
-                    <DrawerTitle>Choose Customer</DrawerTitle>
-                    <DrawerDescription>
-                      Choose a customer to add to the invoice
-                    </DrawerDescription>
-                  </DrawerHeader>
-
                   <CustomersDrawerContent
                     form={form}
                     selectedCustomerId={field.value ?? ""}

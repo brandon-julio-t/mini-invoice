@@ -1,14 +1,21 @@
 import { Button } from "@/components/ui/button";
 import {
+  DrawerClose,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+} from "@/components/ui/drawer";
+import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { TypographyMuted } from "@/components/ui/typography";
 import {
   upsertProductInventorySchema,
   useUpsertProductInventoryMutation,
@@ -45,35 +52,47 @@ export const ProductInventoryUpsertForm: React.ComponentType<{
 
   return (
     <Form {...form}>
-      <form onSubmit={onSubmit} className="flex flex-col gap-4 px-4 pb-4">
-        <header>
-          <TypographyMuted className="text-muted-foreground text-sm">
-            Current Quantity: {currentQuantity}
-          </TypographyMuted>
-        </header>
+      <DrawerHeader>
+        <DrawerTitle>Update Stock</DrawerTitle>
+        <DrawerDescription>
+          Update the stock for &quot;{productName}&quot;
+        </DrawerDescription>
+      </DrawerHeader>
 
-        <FormField
-          control={form.control}
-          name="finalQuantity"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Final Quantity</FormLabel>
-              <FormControl>
-                <Input {...field} type="number" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <form onSubmit={onSubmit}>
+        <div className="px-4">
+          <FormField
+            control={form.control}
+            name="finalQuantity"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Final Quantity</FormLabel>
+                <FormControl>
+                  <Input {...field} type="number" />
+                </FormControl>
+                <FormDescription>
+                  Current Quantity: {currentQuantity}
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
-        <Button
-          type="button"
-          onClick={onSubmit}
-          isLoading={form.formState.isSubmitting}
-          className="w-full"
-        >
-          Save
-        </Button>
+        <DrawerFooter>
+          <Button
+            type="button"
+            onClick={onSubmit}
+            isLoading={form.formState.isSubmitting}
+            className="w-full"
+          >
+            Save
+          </Button>
+
+          <DrawerClose asChild>
+            <Button variant="outline">Cancel</Button>
+          </DrawerClose>
+        </DrawerFooter>
       </form>
     </Form>
   );

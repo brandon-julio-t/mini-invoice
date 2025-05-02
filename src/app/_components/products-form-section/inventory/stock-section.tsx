@@ -1,12 +1,6 @@
 import { Button } from "@/components/ui/button";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
+import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
+import { SlidingNumber } from "@/components/ui/sliding-number";
 import { type createInvoiceSchema } from "@/service/invoice";
 import { useGetAllProductInventoriesQuery } from "@/service/product-inventory";
 import { PencilIcon } from "lucide-react";
@@ -14,7 +8,6 @@ import React from "react";
 import { type UseFormReturn } from "react-hook-form";
 import { type z } from "zod";
 import { ProductInventoryUpsertForm } from "./upsert-form";
-import { SlidingNumber } from "@/components/ui/sliding-number";
 
 export const ProductInventoryStockSection: React.ComponentType<{
   form: UseFormReturn<z.infer<typeof createInvoiceSchema>>;
@@ -48,14 +41,7 @@ export const ProductInventoryStockSection: React.ComponentType<{
             <PencilIcon className="ml-auto" />
           </Button>
         </DrawerTrigger>
-        <DrawerContent className="pb-4">
-          <DrawerHeader>
-            <DrawerTitle>Update Stock</DrawerTitle>
-            <DrawerDescription>
-              Update the stock for &quot;{productName}&quot;
-            </DrawerDescription>
-          </DrawerHeader>
-
+        <DrawerContent>
           <ProductInventoryUpsertForm
             productId={productId}
             productName={productName}
