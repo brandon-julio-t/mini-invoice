@@ -66,7 +66,7 @@ export const CustomersDrawerContent: React.ComponentType<{
   const rowVirtualizer = useVirtualizer({
     count: customers.length,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => 36,
+    estimateSize: () => 40,
   });
 
   return (

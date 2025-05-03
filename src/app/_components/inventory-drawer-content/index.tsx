@@ -45,7 +45,7 @@ export const InventoryDrawerContent: React.ComponentType = () => {
   const rowVirtualizer = useVirtualizer({
     count: products.length,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => 36,
+    estimateSize: () => 40,
   });
 
   return (
