@@ -99,7 +99,7 @@ export const ProductsFormSection: React.ComponentType<{
             const prev = form.getValues("invoiceItems");
             form.setValue("invoiceItems", [
               ...prev,
-              { productName: "", price: 0, quantity: 0, _id: nanoid() },
+              { productName: "", price: 0, quantity: 1, _id: nanoid() },
             ]);
           }}
           className="w-full"

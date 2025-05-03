@@ -53,7 +53,7 @@ export const CustomersDrawerContent: React.ComponentType<{
     form.setValue("customerId", response.data.id);
     form.setValue("customerName", response.data.name);
     form.setValue("invoiceItems", [
-      { productName: "", price: 0, quantity: 0, _id: nanoid() },
+      { productName: "", price: 0, quantity: 1, _id: nanoid() },
     ]);
 
     onCustomerSelected();
@@ -156,7 +156,7 @@ export const CustomersDrawerContent: React.ComponentType<{
                     form.setValue("customerId", customer.id);
                     form.setValue("customerName", customer.name);
                     form.setValue("invoiceItems", [
-                      { productName: "", price: 0, quantity: 0, _id: nanoid() },
+                      { productName: "", price: 0, quantity: 1, _id: nanoid() },
                     ]);
                     onCustomerSelected();
                   }}
