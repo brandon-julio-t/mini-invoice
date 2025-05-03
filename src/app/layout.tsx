@@ -7,10 +7,37 @@ import { Inter as FontSans } from "next/font/google";
 import { MotionConfig } from "motion/react";
 import { type Metadata } from "next";
 import { ThemeProvider } from "@/components/ui/theme-provider";
+import localFont from "next/font/local";
 
 const fontSans = FontSans({
   subsets: ["latin"],
   variable: "--font-sans",
+});
+
+const fontMono = localFont({
+  src: [
+    {
+      path: "./CommitMonoV143/CommitMono-400-Regular.otf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "./CommitMonoV143/CommitMono-400-Italic.otf",
+      weight: "400",
+      style: "italic",
+    },
+    {
+      path: "./CommitMonoV143/CommitMono-700-Regular.otf",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "./CommitMonoV143/CommitMono-700-Italic.otf",
+      weight: "700",
+      style: "italic",
+    },
+  ],
+  variable: "--font-mono",
 });
 
 export const metadata: Metadata = {
@@ -26,7 +53,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${fontSans.variable} antialiased`}
+      className={`${fontSans.variable} ${fontMono.variable} antialiased`}
     >
       <body>
         <TRPCReactProvider>
