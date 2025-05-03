@@ -61,7 +61,7 @@ export const ProductsFormSection: React.ComponentType<{
                 opacity: 1,
                 scale: 1,
                 height: "auto",
-                marginBottom: 16,
+                marginBottom: 24,
                 filter: "blur(0px)",
               }}
               exit={{
@@ -90,7 +90,7 @@ export const ProductsFormSection: React.ComponentType<{
         </AnimatePresence>
       </CardContent>
 
-      <CardFooter className="flex flex-col gap-2">
+      <CardFooter className="-mt-6 flex flex-col gap-2">
         <Button
           type="button"
           variant="outline"

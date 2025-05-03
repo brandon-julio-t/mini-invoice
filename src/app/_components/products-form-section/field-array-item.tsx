@@ -29,14 +29,14 @@ export const ProductFieldArrayItem: React.ComponentType<{
   const id = React.useId();
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-6">
       <ChooseProductDrawer form={form} index={index} />
 
       <AnimatePresence>
         {hasSelectedProduct && (
           <motion.div
             key={id}
-            className="flex flex-col gap-2"
+            className="flex flex-col gap-6"
             initial={{
               opacity: 0,
               height: 0,
@@ -100,7 +100,7 @@ export const ProductFieldArrayItem: React.ComponentType<{
         <TrashIcon />
       </Button>
 
-      <div className="-mx-6 mt-6">
+      <div className="-mx-6">
         <Separator />
       </div>
     </div>
