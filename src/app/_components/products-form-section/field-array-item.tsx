@@ -94,7 +94,7 @@ export const ProductFieldArrayItem: React.ComponentType<{
         variant="outline"
         size="icon"
         onClick={onRemove}
-        className="w-full min-w-9"
+        className="-mt-2 w-full"
         disabled={!canRemove}
       >
         <TrashIcon />
