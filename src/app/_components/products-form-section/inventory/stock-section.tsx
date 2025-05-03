@@ -37,8 +37,11 @@ export const ProductInventoryStockSection: React.ComponentType<{
             variant="outline"
             className="items-center justify-start"
           >
-            Current Stock: <SlidingNumber value={currentQuantity} />
-            <PencilIcon className="ml-auto" />
+            <PencilIcon />
+            <span>Current Stock:</span>
+            <div className="ml-auto text-right">
+              <SlidingNumber value={currentQuantity} />
+            </div>
           </Button>
         </DrawerTrigger>
         <DrawerContent>
@@ -52,11 +55,19 @@ export const ProductInventoryStockSection: React.ComponentType<{
       </Drawer>
 
       <Button type="button" variant="ghost" className="justify-start">
-        Used Stock: <SlidingNumber value={usedQuantity} />
+        <PencilIcon className="invisible" />
+        <span>Used Stock:</span>
+        <div className="ml-auto text-right">
+          <SlidingNumber value={usedQuantity} />
+        </div>
       </Button>
 
       <Button type="button" variant="ghost" className="justify-start">
-        Final Stock: <SlidingNumber value={finalQuantity} />
+        <PencilIcon className="invisible" />
+        <span>Final Stock:</span>
+        <div className="ml-auto text-right">
+          <SlidingNumber value={finalQuantity} />
+        </div>
       </Button>
     </section>
   );
