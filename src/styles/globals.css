@@ -122,7 +122,8 @@
 
 @utility container {
   @apply mx-auto;
-  @apply px-2;
+  @apply px-4;
+  @apply max-w-lg;
 }
 
 @utility debug {
