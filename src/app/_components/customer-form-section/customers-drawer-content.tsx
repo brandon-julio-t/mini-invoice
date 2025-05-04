@@ -95,6 +95,7 @@ export const CustomersDrawerContent: React.ComponentType<{
         style={{
           height: "60vh",
           overflowY: "auto", // Make it scroll!
+          overflowX: "hidden",
         }}
         className="border-y"
       >
