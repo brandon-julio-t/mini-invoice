@@ -13,7 +13,7 @@ import { SlidingNumber } from "@/components/ui/sliding-number";
 import { useDeleteProductMutation, type Product } from "@/service/product";
 import { type ProductInventory } from "@/service/product-inventory";
 import { TrashIcon } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import { motion } from "motion/react";
 import React from "react";
 import { toast } from "sonner";
 import { ProductInventoryUpsertForm } from "../products-form-section/inventory/upsert-form";
@@ -64,7 +64,7 @@ export const InventoryProductListItem: React.ComponentType<{
           <Button
             variant="ghost"
             size="lg"
-            className="flex flex-1 flex-row justify-between !px-4"
+            className="relative flex flex-1 flex-row justify-between overflow-hidden !px-4"
           >
             <span>{product.name}</span>
             <span className="flex items-center">
@@ -76,53 +76,46 @@ export const InventoryProductListItem: React.ComponentType<{
           </Button>
         </DrawerTrigger>
 
-        <AnimatePresence>
-          {showDelete && (
-            <motion.div
-              initial={{ opacity: 0, width: 0 }}
-              animate={{ opacity: 1, width: "auto" }}
-              exit={{ opacity: 0, width: 0 }}
-            >
-              <Drawer>
-                <DrawerTrigger asChild>
-                  <Button
-                    variant="destructive"
-                    size="icon"
-                    className="mr-4 size-10"
-                  >
-                    <TrashIcon />
+        <motion.div
+          variants={VARIANTS}
+          initial="hidden"
+          animate={showDelete ? "visible" : "hidden"}
+        >
+          <Drawer>
+            <DrawerTrigger asChild>
+              <Button
+                variant="destructive"
+                size="icon"
+                className="mr-4 size-10"
+              >
+                <TrashIcon />
+              </Button>
+            </DrawerTrigger>
+            <DrawerContent>
+              <DrawerHeader>
+                <DrawerTitle>Delete Product</DrawerTitle>
+                <DrawerDescription>
+                  Are you sure you want to delete &quot;{product.name}
+                  &quot;?
+                </DrawerDescription>
+              </DrawerHeader>
+              <DrawerFooter className="-mt-4">
+                <Button
+                  variant="destructive"
+                  onClick={onDeleteProductConfirmed}
+                  isLoading={deleteProduct.isPending}
+                >
+                  Yes, delete
+                </Button>
+                <DrawerClose asChild>
+                  <Button variant="outline" isLoading={deleteProduct.isPending}>
+                    No, cancel
                   </Button>
-                </DrawerTrigger>
-                <DrawerContent>
-                  <DrawerHeader>
-                    <DrawerTitle>Delete Product</DrawerTitle>
-                    <DrawerDescription>
-                      Are you sure you want to delete &quot;{product.name}
-                      &quot;?
-                    </DrawerDescription>
-                  </DrawerHeader>
-                  <DrawerFooter className="-mt-4">
-                    <Button
-                      variant="destructive"
-                      onClick={onDeleteProductConfirmed}
-                      isLoading={deleteProduct.isPending}
-                    >
-                      Yes, delete
-                    </Button>
-                    <DrawerClose asChild>
-                      <Button
-                        variant="outline"
-                        isLoading={deleteProduct.isPending}
-                      >
-                        No, cancel
-                      </Button>
-                    </DrawerClose>
-                  </DrawerFooter>
-                </DrawerContent>
-              </Drawer>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                </DrawerClose>
+              </DrawerFooter>
+            </DrawerContent>
+          </Drawer>
+        </motion.div>
       </motion.div>
 
       <DrawerContent>
@@ -137,4 +130,13 @@ export const InventoryProductListItem: React.ComponentType<{
       </DrawerContent>
     </Drawer>
   );
+};
+
+const BUTTON_SIZE = 40;
+const ATOM = 4;
+const SPACING = 4 * ATOM;
+
+const VARIANTS = {
+  hidden: { marginRight: -(BUTTON_SIZE + SPACING) },
+  visible: { marginRight: 0 },
 };
