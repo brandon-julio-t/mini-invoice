@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import {
   Card,
+  CardAction,
   CardContent,
   CardDescription,
   CardHeader,
@@ -57,38 +58,37 @@ export const PageView = () => {
     <main className="container my-4">
       <Form {...form}>
         <form onSubmit={onSubmit} className="flex flex-col gap-4">
-          <Card className="relative">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="absolute top-4 right-4"
-                >
-                  {theme === "dark" ? <SunIcon /> : <MoonIcon />}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => setTheme("light")}>
-                  <SunIcon />
-                  Light
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setTheme("dark")}>
-                  <MoonIcon />
-                  Dark
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setTheme("system")}>
-                  <ComputerIcon />
-                  System
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
+          <Card>
             <CardHeader>
               <CardTitle>Invoice</CardTitle>
+
               <CardDescription>
                 Please fill in the details below to create an invoice
               </CardDescription>
+
+              <CardAction>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="icon">
+                      {theme === "dark" ? <SunIcon /> : <MoonIcon />}
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={() => setTheme("light")}>
+                      <SunIcon />
+                      Light
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setTheme("dark")}>
+                      <MoonIcon />
+                      Dark
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setTheme("system")}>
+                      <ComputerIcon />
+                      System
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </CardAction>
             </CardHeader>
 
             <CardContent className="flex flex-col gap-2">
